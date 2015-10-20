@@ -14,14 +14,28 @@
  * limitations under the License.
  */
 
+package playground;
+
+import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.context.support.StaticApplicationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.async.client.MongoClientSettings;
+import com.mongodb.reactivestreams.client.MongoClients;
+import com.mongodb.reactivestreams.client.MongoDatabase;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.reactive.codec.encoder.JacksonJsonEncoder;
 import org.springframework.reactive.codec.encoder.JsonObjectEncoder;
+import org.springframework.reactive.codec.encoder.MessageToByteEncoder;
 import org.springframework.reactive.codec.encoder.StringEncoder;
 import org.springframework.reactive.web.dispatch.DispatcherHandler;
+import org.springframework.reactive.web.dispatch.SimpleHandlerResultHandler;
 import org.springframework.reactive.web.dispatch.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.reactive.web.dispatch.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.reactive.web.dispatch.method.annotation.ResponseBodyResultHandler;
@@ -31,17 +45,12 @@ import org.springframework.reactive.web.http.reactor.ReactorHttpServer;
 /**
  * @author Sebastien Deleuze
  */
+@Configuration
 public class Application {
 
 	public static void main(String[] args) throws Exception {
 
-		StaticApplicationContext context = new StaticApplicationContext();
-		context.registerSingleton("handlerMapping", RequestMappingHandlerMapping.class);
-		context.registerSingleton("handlerAdapter", RequestMappingHandlerAdapter.class);
-		context.getDefaultListableBeanFactory().registerSingleton("responseBodyResultHandler",
-				new ResponseBodyResultHandler(Arrays.asList(new StringEncoder(), new JacksonJsonEncoder()), Arrays.asList(new JsonObjectEncoder())));
-		context.registerSingleton("playgroundController", PlaygroundController.class);
-		context.refresh();
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("playground");
 		DispatcherHandler dispatcherHandler = new DispatcherHandler();
 		dispatcherHandler.setApplicationContext(context);
 
@@ -52,7 +61,6 @@ public class Application {
 		server.start();
 
 		CompletableFuture<Void> stop = new CompletableFuture<>();
-
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			stop.complete(null);
 		}));
@@ -61,6 +69,38 @@ public class Application {
 			stop.wait();
 		}
 
+	}
+
+	@Bean
+	RequestMappingHandlerMapping handlerMapping() {
+		return new RequestMappingHandlerMapping();
+	}
+
+	@Bean
+	RequestMappingHandlerAdapter handlerAdapter() {
+		return new RequestMappingHandlerAdapter();
+	}
+
+	@Bean
+	ResponseBodyResultHandler responseBodyResultHandler() {
+		List<MessageToByteEncoder<?>> serializers = Arrays.asList(new StringEncoder(), new JacksonJsonEncoder());
+		List<MessageToByteEncoder<ByteBuffer>> preProcessors = Arrays.asList(new JsonObjectEncoder());
+		return new ResponseBodyResultHandler(serializers, preProcessors);
+	}
+
+	@Bean
+	SimpleHandlerResultHandler simpleResultHandler() {
+		return new SimpleHandlerResultHandler();
+	}
+
+	@Bean
+	ObjectMapper objectMapper() {
+		return Jackson2ObjectMapperBuilder.json().build();
+	}
+
+	@Bean
+	MongoDatabase mongoDatabase() {
+		return MongoClients.create().getDatabase("reactive-playground");
 	}
 
 }

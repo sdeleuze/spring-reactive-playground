@@ -14,20 +14,39 @@
  * limitations under the License.
  */
 
+package playground;
+
+import org.reactivestreams.Publisher;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author Sebastien Deleuze
  */
 @Controller
-public class PlaygroundController {
+public class PersonController {
 
-	@RequestMapping("/")
+	private final PersonRepository repository;
+
+	@Autowired
+	public PersonController(PersonRepository repository) {
+		this.repository = repository;
+	}
+
+	@RequestMapping(path = "/", method = RequestMethod.POST)
+	public Publisher<Void> create(@RequestBody Publisher<Person> personStream) {
+		return this.repository.insert(personStream);
+	}
+
+	@RequestMapping(path = "/", method = RequestMethod.GET)
 	@ResponseBody
-	public String home() {
-		return "home";
+	public Publisher<Person> list() {
+		return this.repository.list();
 	}
 
 }
