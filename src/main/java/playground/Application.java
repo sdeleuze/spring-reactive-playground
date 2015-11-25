@@ -16,31 +16,32 @@
 
 package playground;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.async.client.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.codec.support.ByteBufferEncoder;
+import org.springframework.core.codec.support.JacksonJsonEncoder;
+import org.springframework.core.codec.support.JsonObjectEncoder;
+import org.springframework.core.codec.support.StringEncoder;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.reactive.codec.encoder.JacksonJsonEncoder;
-import org.springframework.reactive.codec.encoder.JsonObjectEncoder;
-import org.springframework.reactive.codec.encoder.MessageToByteEncoder;
-import org.springframework.reactive.codec.encoder.StringEncoder;
-import org.springframework.reactive.web.dispatch.DispatcherHandler;
-import org.springframework.reactive.web.dispatch.SimpleHandlerResultHandler;
-import org.springframework.reactive.web.dispatch.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.reactive.web.dispatch.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.reactive.web.dispatch.method.annotation.ResponseBodyResultHandler;
-import org.springframework.reactive.web.http.HttpServer;
-import org.springframework.reactive.web.http.reactor.ReactorHttpServer;
+import org.springframework.http.server.support.HttpServer;
+import org.springframework.http.server.support.ReactorHttpServer;
+import org.springframework.http.server.support.RxNettyHttpServer;
+import org.springframework.web.reactive.DispatcherHandler;
+import org.springframework.web.reactive.handler.SimpleHandlerResultHandler;
+import org.springframework.web.reactive.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.reactive.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.reactive.method.annotation.ResponseBodyResultHandler;
 
 /**
  * @author Sebastien Deleuze
@@ -78,18 +79,28 @@ public class Application {
 
 	@Bean
 	RequestMappingHandlerAdapter handlerAdapter() {
-		return new RequestMappingHandlerAdapter();
+		RequestMappingHandlerAdapter handlerAdapter = new RequestMappingHandlerAdapter();
+		handlerAdapter.setConversionService(conversionService());
+		return handlerAdapter;
+	}
+
+	@Bean
+	ConversionService conversionService() {
+		GenericConversionService service = new GenericConversionService();
+		service.addConverter(new ReactiveStreamsToCompletableFutureConverter());
+		//service.addConverter(new ReactiveStreamsToRxJava1Converter());
+		return service;
 	}
 
 	@Bean
 	ResponseBodyResultHandler responseBodyResultHandler() {
-		List<MessageToByteEncoder<?>> serializers = Arrays.asList(new StringEncoder(), new JacksonJsonEncoder());
-		List<MessageToByteEncoder<ByteBuffer>> preProcessors = Arrays.asList(new JsonObjectEncoder());
-		return new ResponseBodyResultHandler(serializers, preProcessors);
+		return new ResponseBodyResultHandler(Arrays.asList(
+				new ByteBufferEncoder(), new StringEncoder(), new JacksonJsonEncoder(new JsonObjectEncoder())),
+				conversionService());
 	}
 
 	@Bean
-	SimpleHandlerResultHandler simpleResultHandler() {
+	SimpleHandlerResultHandler simpleHandlerResultHandler() {
 		return new SimpleHandlerResultHandler();
 	}
 
