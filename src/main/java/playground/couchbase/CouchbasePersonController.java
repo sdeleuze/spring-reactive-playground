@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package playground;
+package playground.couchbase;
 
-import org.reactivestreams.Publisher;
+import playground.Person;
+import rx.Observable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,23 +30,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Sebastien Deleuze
  */
 @Controller
-public class PersonController {
+public class CouchbasePersonController {
 
-	private final PersonRepository repository;
+	private final CouchbasePersonRepository repository;
 
 	@Autowired
-	public PersonController(PersonRepository repository) {
+	public CouchbasePersonController(CouchbasePersonRepository repository) {
 		this.repository = repository;
 	}
 
-	@RequestMapping(path = "/", method = RequestMethod.POST)
-	public Publisher<Void> create(@RequestBody Publisher<Person> personStream) {
+	@RequestMapping(path = "/couchbase", method = RequestMethod.POST)
+	public Observable<Void> create(@RequestBody Observable<Person> personStream) {
 		return this.repository.insert(personStream);
 	}
 
-	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@RequestMapping(path = "/couchbase", method = RequestMethod.GET)
 	@ResponseBody
-	public Publisher<Person> list() {
+	public Observable<Person> list() {
 		return this.repository.list();
 	}
 

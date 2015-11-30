@@ -18,33 +18,37 @@ jar {
 
 group = 'org.springframework.reactive'
 
-repositories {
-	mavenLocal()
-	mavenCentral()
-	maven { url 'https://oss.jfrog.org/libs-snapshot' }  // RxNetty 0.5.x snapshots
-	maven { url 'http://repo.spring.io/snapshot' }  // Spring Reactive and Reactor snapshot
-}
-
 configurations.all {
 	// check for updates every build
 	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url 'http://repo.spring.io/snapshot' }  // Spring Reactive and Reactor snapshot
+}
+
 dependencies {
 	compile "org.springframework.reactive:spring-reactive:0.1.0.BUILD-SNAPSHOT"
 	compile "com.fasterxml.jackson.core:jackson-databind:2.6.1"
+
+	compile "io.projectreactor:reactor-net:2.1.0.BUILD-SNAPSHOT"
 	compile "io.netty:netty-codec-http:4.0.31.Final"
 	compile "io.netty:netty-transport-native-epoll:4.0.31.Final"
+
 	compile "org.mongodb:mongodb-driver-reactivestreams:1.1.0"
+	compile "com.couchbase.client:java-client:2.2.2"
+
 	compile "org.slf4j:slf4j-jcl:1.7.12"
 	compile "org.slf4j:jul-to-slf4j:1.7.12"
 	compile("log4j:log4j:1.2.16")
 
-	// Engines
-	compile "io.projectreactor:reactor-net:2.1.0.BUILD-SNAPSHOT"
-	compile "io.reactivex:rxnetty:0.5.0-SNAPSHOT"
-
 	// Temporary dependency cf. https://github.com/spring-projects/spring-reactive/issues/45
 	compile "javax.servlet:javax.servlet-api:3.1.0"
+
+	// Temporary dependency wating Stephane find a way to do that without reactor-stream
+	// https://github.com/spring-projects/spring-reactive/blob/master/src/main/java/org/springframework/web/reactive/method/InvocableHandlerMethod.java
+	compile "io.projectreactor:reactor-stream:2.1.0.BUILD-SNAPSHOT"
 }
 

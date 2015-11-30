@@ -19,6 +19,9 @@ package playground;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
+import com.couchbase.client.java.AsyncBucket;
+import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.CouchbaseCluster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
@@ -33,10 +36,10 @@ import org.springframework.core.codec.support.StringEncoder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
+import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.server.support.HttpServer;
 import org.springframework.http.server.support.ReactorHttpServer;
-import org.springframework.http.server.support.RxNettyHttpServer;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.handler.SimpleHandlerResultHandler;
 import org.springframework.web.reactive.method.annotation.RequestMappingHandlerAdapter;
@@ -88,20 +91,20 @@ public class Application {
 	ConversionService conversionService() {
 		GenericConversionService service = new GenericConversionService();
 		service.addConverter(new ReactiveStreamsToCompletableFutureConverter());
-		//service.addConverter(new ReactiveStreamsToRxJava1Converter());
+		service.addConverter(new ReactiveStreamsToRxJava1Converter());
 		return service;
 	}
 
 	@Bean
 	ResponseBodyResultHandler responseBodyResultHandler() {
 		return new ResponseBodyResultHandler(Arrays.asList(
-				new ByteBufferEncoder(), new StringEncoder(), new JacksonJsonEncoder(new JsonObjectEncoder())),
-				conversionService());
+				new ByteBufferEncoder(), new StringEncoder(),
+				new JacksonJsonEncoder(new JsonObjectEncoder())), conversionService());
 	}
 
 	@Bean
 	SimpleHandlerResultHandler simpleHandlerResultHandler() {
-		return new SimpleHandlerResultHandler();
+		return new SimpleHandlerResultHandler(conversionService());
 	}
 
 	@Bean
@@ -112,6 +115,14 @@ public class Application {
 	@Bean
 	MongoDatabase mongoDatabase() {
 		return MongoClients.create().getDatabase("reactive-playground");
+	}
+
+	// You should create an index with the following query before using it:
+	// CREATE PRIMARY INDEX ON `default`
+	@Bean
+	AsyncBucket couchbaseDefaultBucket() {
+		CouchbaseCluster cluster = CouchbaseCluster.create("127.0.0.1");
+		return cluster.openBucket("default").async();
 	}
 
 }

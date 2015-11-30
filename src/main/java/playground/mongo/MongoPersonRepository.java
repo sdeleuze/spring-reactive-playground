@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package playground;
+package playground.mongo;
 
 import java.io.IOException;
 
@@ -24,8 +24,7 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.bson.Document;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import playground.Person;
 import reactor.Publishers;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +34,13 @@ import org.springframework.stereotype.Repository;
  * @author Sebastien Deleuze
  */
 @Repository
-public class PersonRepository {
+public class MongoPersonRepository {
 
-	private static final Logger logger = LoggerFactory.getLogger(PersonRepository.class);
 	private final ObjectMapper mapper;
 	private final MongoCollection<Document> col;
 
 	@Autowired
-	public PersonRepository(MongoDatabase db, ObjectMapper mapper) {
+	public MongoPersonRepository(MongoDatabase db, ObjectMapper mapper) {
 		this.mapper = mapper;
 		this.col = db.getCollection("persons");
 	}
