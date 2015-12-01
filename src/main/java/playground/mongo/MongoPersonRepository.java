@@ -32,7 +32,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * MongoDB async driver is available as Reactive Streams and RxJava.
- * I have chosen the Reactive Streams one.
+ * Here, Reactive Streams one is used.
  * @author Sebastien Deleuze
  */
 @Repository

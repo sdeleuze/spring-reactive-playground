@@ -30,6 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
+ * Couchebase 2.x driver is RxJava1 based and use only Observable, even for async single values
+ * Couchebase 3.x driver may be based on RxJava 2.0, with usage of Single instead of Observable where it is relevant
+ *
  * @author Sebastien Deleuze
  */
 @Repository
@@ -37,6 +40,7 @@ public class CouchbasePersonRepository {
 
 	private static final Logger logger = LoggerFactory.getLogger(CouchbasePersonRepository.class);
 
+	// Couchbase repositories are like a simplified experimental Spring Data
 	private final AsyncRepository repository;
 	private final AsyncBucket bucket;
 
@@ -51,12 +55,17 @@ public class CouchbasePersonRepository {
 			String id = person.getFirstname() + "_" + person.getLastname();
 			EntityDocument doc = EntityDocument.create(id, person);
 			return this.repository.insert(doc);
+		// See https://github.com/ReactiveX/RxJava/issues/3037 about Observable<Void>
 		}).flatMap(document -> Observable.empty());
 	}
 
 	public Observable<Person> list() {
 		return this.bucket.query(N1qlQuery.simple("SELECT META(default).id FROM default"))
 				.flatMap(result -> {
+					// Already discussed with Simon Baslé: AsyncN1qlQueryResult API make not very easy to deal with errors
+					// since they are now emitted as errors in the main Observable<AsyncN1qlQueryRow>
+					// They will maybe provide an adapter to make our job easier in 2.x drivers
+					// API may be improved in 3.x driver
 					if (result.parseSuccess()) {
 						return result.rows().flatMap(row -> {
 							String id = row.value().getString("id");

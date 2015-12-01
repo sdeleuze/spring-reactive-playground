@@ -51,13 +51,15 @@ public class PostgresPersonRepository {
 				Consumer<Throwable> onError = throwable -> subscriber.onError(throwable);
 				db.query("insert into persons(firstname, lastname, address, postalCode, city) values($1, $2, $3, $4, $5)",
 					Arrays.asList(p.getFirstname(), p.getFirstname(), p.getAddress(), p.getPostalCode(), p.getCity()), onSuccess, onError);
+			// See https://github.com/ReactiveX/RxJava/issues/3037 about Observable<Void>
 			})).flatMap(document -> Observable.empty());
 	}
 
 	public Observable<Person> list() {
 		return Observable.create(subscriber -> {
 			Consumer<ResultSet> onSuccess = resultSet -> {
-					// We can only get the multiple rows at the same time, more details on this feature request
+					// We can only get the multiple rows at the same time, it would be better to retreive them
+					// with an Observable<Row> or a Publisher<Row>. More details on the related feature request at
 					// https://github.com/alaisi/postgres-async-driver/issues/4#issuecomment-160980796
 					for (Row row : resultSet) {
 						subscriber.onNext(new Person(row.getString("firstname"), row.getString("lastname"),
