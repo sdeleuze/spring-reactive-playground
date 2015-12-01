@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
+ * MongoDB async driver is available as Reactive Streams and RxJava.
+ * I have chosen the Reactive Streams one.
  * @author Sebastien Deleuze
  */
 @Repository

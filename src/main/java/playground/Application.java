@@ -19,15 +19,6 @@ package playground;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
-import com.couchbase.client.java.AsyncBucket;
-import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.CouchbaseCluster;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.pgasync.ConnectionPoolBuilder;
-import com.github.pgasync.Db;
-import com.mongodb.reactivestreams.client.MongoClients;
-import com.mongodb.reactivestreams.client.MongoDatabase;
-
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +30,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
 import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.server.support.HttpServer;
 import org.springframework.http.server.support.ReactorHttpServer;
 import org.springframework.web.reactive.DispatcherHandler;
@@ -107,32 +97,6 @@ public class Application {
 	@Bean
 	SimpleHandlerResultHandler simpleHandlerResultHandler() {
 		return new SimpleHandlerResultHandler(conversionService());
-	}
-
-	@Bean
-	ObjectMapper objectMapper() {
-		return Jackson2ObjectMapperBuilder.json().build();
-	}
-
-	@Bean
-	MongoDatabase mongoDatabase() {
-		return MongoClients.create().getDatabase("reactive-playground");
-	}
-
-	// You should create an index with the following query before using it:
-	// CREATE PRIMARY INDEX ON `default`
-	@Bean
-	AsyncBucket couchbaseDefaultBucket() {
-		CouchbaseCluster cluster = CouchbaseCluster.create("127.0.0.1");
-		return cluster.openBucket("default").async();
-	}
-
-	// You should create this table with the following query before using it:
-	// CREATE TABLE persons (firstname text, lastname text, address text, postalCode text, city text);
-	@Bean
-	Db postgreSqlDb() {
-		return new ConnectionPoolBuilder().hostname("localhost").port(5432)
-				.database("seb").username("seb").poolSize(20).build();
 	}
 
 }
