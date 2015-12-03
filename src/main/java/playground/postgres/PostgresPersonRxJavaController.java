@@ -16,6 +16,8 @@
 
 package playground.postgres;
 
+import java.net.ConnectException;
+
 import playground.Person;
 import rx.Observable;
 
@@ -30,12 +32,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Sebastien Deleuze
  */
 @Controller
-public class PostgresPersonController {
+public class PostgresPersonRxJavaController {
 
-	private final PostgresPersonRepository repository;
+	private final PostgresPersonRxJavaRepository repository;
 
 	@Autowired
-	public PostgresPersonController(PostgresPersonRepository repository) {
+	public PostgresPersonRxJavaController(PostgresPersonRxJavaRepository repository) {
 		this.repository = repository;
 	}
 
@@ -47,7 +49,8 @@ public class PostgresPersonController {
 	@RequestMapping(path = "/postgres", method = RequestMethod.GET)
 	@ResponseBody
 	public Observable<Person> list() {
-		return this.repository.list();
+		//return this.repository.list();
+		return Observable.error(new ConnectException());
 	}
 
 }

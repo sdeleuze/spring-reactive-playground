@@ -16,8 +16,9 @@
 
 package playground.mongo;
 
-import org.reactivestreams.Publisher;
 import playground.Person;
+import reactor.Flux;
+import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,14 +41,14 @@ public class MongoPersonController {
 	}
 
 	@RequestMapping(path = "/mongo", method = RequestMethod.POST)
-	public Publisher<Void> create(@RequestBody Publisher<Person> personStream) {
-		return this.repository.insert(personStream);
+	public Mono<Void> create(@RequestBody Mono<Person> personStream) {
+		return this.repository.save(personStream).after();
 	}
 
 	@RequestMapping(path = "/mongo", method = RequestMethod.GET)
 	@ResponseBody
-	public Publisher<Person> list() {
-		return this.repository.list();
+	public Flux<Person> list() {
+		return this.repository.findAll();
 	}
 
 }

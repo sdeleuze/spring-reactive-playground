@@ -30,12 +30,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Sebastien Deleuze
  */
 @Controller
-public class CouchbasePersonController {
+public class CouchbasePersonRxJavaController {
 
-	private final CouchbasePersonRepository repository;
+	private final CouchbasePersonRxJavaRepository repository;
 
 	@Autowired
-	public CouchbasePersonController(CouchbasePersonRepository repository) {
+	public CouchbasePersonRxJavaController(CouchbasePersonRxJavaRepository repository) {
 		this.repository = repository;
 	}
 

@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
-package playground.mongo;
+package org.springframework.data.domain;
 
-import playground.Person;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.repository.ReactiveCrudRepositoryImpl;
-import org.springframework.stereotype.Repository;
+// See https://github.com/spring-projects/spring-reactive/pull/51
+import reactor.Mono;
 
 /**
- * MongoDB async driver is available as Reactive Streams and RxJava.
- * Here, Reactive Streams one is used.
+ * Abstract interface for Reactive Streams based pagination information.
+ *
  * @author Sebastien Deleuze
+ * @see Pageable
  */
-@Repository
-public class MongoPersonRepository extends ReactiveCrudRepositoryImpl<Person, Long> {
+public interface ReactivePageable {
 
-	@Autowired
-	public MongoPersonRepository(ReactiveMongoTemplate template) {
-		super(template, Person.class);
-	}
+	int getPageNumber();
+
+	int getPageSize();
+
+	int getOffset();
+
+	Sort getSort();
+
+	Mono<ReactivePageable> next();
+
+	Mono<ReactivePageable> previousOrFirst();
+
+	Mono<ReactivePageable> first();
+
+	boolean hasPrevious();
+
 }

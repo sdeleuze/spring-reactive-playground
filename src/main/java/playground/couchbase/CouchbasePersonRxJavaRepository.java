@@ -36,16 +36,16 @@ import org.springframework.stereotype.Repository;
  * @author Sebastien Deleuze
  */
 @Repository
-public class CouchbasePersonRepository {
+public class CouchbasePersonRxJavaRepository {
 
-	private static final Logger logger = LoggerFactory.getLogger(CouchbasePersonRepository.class);
+	private static final Logger logger = LoggerFactory.getLogger(CouchbasePersonRxJavaRepository.class);
 
 	// Couchbase repositories are like a simplified experimental Spring Data
 	private final AsyncRepository repository;
 	private final AsyncBucket bucket;
 
 	@Autowired
-	public CouchbasePersonRepository(AsyncBucket bucket) {
+	public CouchbasePersonRxJavaRepository(AsyncBucket bucket) {
 		this.bucket = bucket;
 		this.repository = bucket.repository().toBlocking().first();
 	}

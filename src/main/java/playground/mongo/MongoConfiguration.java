@@ -16,13 +16,16 @@
 
 package playground.mongo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
+import fr.javatic.mongo.jacksonCodec.JacksonCodecProvider;
+import fr.javatic.mongo.jacksonCodec.ObjectMapperFactory;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 
 /**
  * @author Sebastien Deleuze
@@ -31,13 +34,10 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 public class MongoConfiguration {
 
 	@Bean
-	ObjectMapper objectMapper() {
-		return Jackson2ObjectMapperBuilder.json().build();
-	}
-
-	@Bean
-	MongoDatabase mongoDatabase() {
-		return MongoClients.create().getDatabase("reactive-playground");
+	ReactiveMongoTemplate mongoTemplate() {
+		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(new JacksonCodecProvider(ObjectMapperFactory.createObjectMapper())));
+		MongoDatabase database = MongoClients.create().getDatabase("reactive-playground").withCodecRegistry(codecRegistry);
+		return new ReactiveMongoTemplate(database);
 	}
 
 }

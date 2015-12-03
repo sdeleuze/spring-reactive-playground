@@ -27,12 +27,12 @@ import org.springframework.stereotype.Repository;
  * @author Sebastien Deleuze
  */
 @Repository
-public class PostgresPersonRepository {
+public class PostgresPersonRxJavaRepository {
 
 	private final Db db;
 
 	@Autowired
-	public PostgresPersonRepository(Db db) {
+	public PostgresPersonRxJavaRepository(Db db) {
 		this.db = db;
 	}
 
