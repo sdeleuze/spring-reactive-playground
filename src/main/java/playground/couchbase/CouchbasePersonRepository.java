@@ -62,8 +62,8 @@ public class CouchbasePersonRepository {
 	public Observable<Person> list() {
 		return this.bucket.query(N1qlQuery.simple("SELECT META(default).id FROM default"))
 				.flatMap(result -> {
-					// Already discussed with Simon Baslé: AsyncN1qlQueryResult API make not very easy to deal with errors
-					// since they are now emitted as errors in the main Observable<AsyncN1qlQueryRow>
+					// Already discussed with Simon Baslé: AsyncN1qlQueryResult API does not make very easy to deal with errors
+					// since they are not emitted as errors in the main Observable<AsyncN1qlQueryRow>
 					// They will maybe provide an adapter to make our job easier in 2.x drivers
 					// API may be improved in 3.x driver
 					if (result.parseSuccess()) {

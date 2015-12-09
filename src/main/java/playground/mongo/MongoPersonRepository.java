@@ -51,7 +51,7 @@ public class MongoPersonRepository {
 		return Publishers.flatMap(personStream, p -> {
 			try {
 				Document doc = Document.parse(mapper.writeValueAsString(p));
-				return Publishers.completable(col.insertOne(doc));
+				return Publishers.after(col.insertOne(doc));
 			}
 			catch (JsonProcessingException ex) {
 				return Publishers.error(ex);
