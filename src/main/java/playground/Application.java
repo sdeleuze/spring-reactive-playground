@@ -30,6 +30,9 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
 import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
+import org.springframework.http.server.reactive.ErrorHandlingHttpHandler;
+import org.springframework.http.server.reactive.HttpHandler;
+import org.springframework.http.server.reactive.InternalServerErrorExceptionHandler;
 import org.springframework.http.server.reactive.boot.HttpServer;
 import org.springframework.http.server.reactive.boot.JettyHttpServer;
 import org.springframework.http.server.reactive.boot.ReactorHttpServer;
@@ -37,6 +40,7 @@ import org.springframework.http.server.reactive.boot.RxNettyHttpServer;
 import org.springframework.http.server.reactive.boot.TomcatHttpServer;
 import org.springframework.http.server.reactive.boot.UndertowHttpServer;
 import org.springframework.web.reactive.DispatcherHandler;
+import org.springframework.web.reactive.ResponseStatusExceptionHandler;
 import org.springframework.web.reactive.handler.SimpleHandlerResultHandler;
 import org.springframework.web.reactive.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.reactive.method.annotation.RequestMappingHandlerMapping;
@@ -54,9 +58,12 @@ public class Application {
 		DispatcherHandler dispatcherHandler = new DispatcherHandler();
 		dispatcherHandler.setApplicationContext(context);
 
+		HttpHandler httpHandler = new ErrorHandlingHttpHandler(dispatcherHandler,
+				new ResponseStatusExceptionHandler(), new InternalServerErrorExceptionHandler());
+
 		HttpServer server = new ReactorHttpServer();
 		server.setPort(8080);
-		server.setHandler(dispatcherHandler);
+		server.setHandler(httpHandler);
 		server.afterPropertiesSet();
 		server.start();
 
