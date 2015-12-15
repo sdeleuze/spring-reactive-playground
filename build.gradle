@@ -12,6 +12,8 @@ apply plugin: 'propdeps'
 apply plugin: 'propdeps-idea'
 apply plugin: 'propdeps-maven'
 
+ext.reactorVersion = '2.1.0.BUILD-SNAPSHOT'
+
 jar {
 	baseName = 'spring-reactive-playground'
 }
@@ -33,7 +35,8 @@ dependencies {
 	compile "org.springframework.reactive:spring-reactive:0.1.0.BUILD-SNAPSHOT"
 	compile "com.fasterxml.jackson.core:jackson-databind:2.6.1"
 
-	compile "io.projectreactor:reactor-net:2.1.0.BUILD-SNAPSHOT"
+	compile "io.projectreactor:reactor-net:${reactorVersion}"
+	compile "io.projectreactor:reactor-stream:${reactorVersion}"
 	compile "io.netty:netty-codec-http:4.0.31.Final"
 	compile "io.netty:netty-transport-native-epoll:4.0.31.Final"
 
