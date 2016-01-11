@@ -25,7 +25,8 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.bson.Document;
 import org.reactivestreams.Publisher;
 import playground.Person;
-import reactor.Publishers;
+import reactor.Flux;
+import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,25 +48,25 @@ public class MongoPersonRepository {
 		this.col = db.getCollection("persons");
 	}
 
-	public Publisher<Void> insert(Publisher<Person> personStream) {
-		return Publishers.flatMap(personStream, p -> {
+	public Mono<Void> insert(Publisher<Person> personStream) {
+		return Flux.from(personStream).flatMap(p -> {
 			try {
 				Document doc = Document.parse(mapper.writeValueAsString(p));
-				return Publishers.after(col.insertOne(doc));
+				return Mono.from(col.insertOne(doc));
 			}
 			catch (JsonProcessingException ex) {
-				return Publishers.error(ex);
+				return Mono.error(ex);
 			}
-		});
+		}).after();
 	}
 
-	public Publisher<Person> list() {
-		return Publishers.map(this.col.find(), doc -> {
+	public Flux<Person> list() {
+		return Flux.from(this.col.find()).flatMap(doc -> {
 			try {
-				return mapper.readValue(doc.toJson(), Person.class);
+				return Flux.just(mapper.readValue(doc.toJson(), Person.class));
 			}
 			catch (IOException ex) {
-				throw new IllegalStateException(ex);
+				return Flux.error(ex);
 			}
 		});
 	}

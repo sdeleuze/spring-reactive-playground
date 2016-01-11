@@ -30,8 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * Couchebase 2.x driver is RxJava1 based and use only Observable, even for async single values
- * Couchebase 3.x driver may be based on RxJava 2.0, with usage of Single instead of Observable where it is relevant
+ * Couchbase 2.x driver is RxJava1 based and use only Observable, even for async single values
+ * Couchbase 3.x driver may be based on RxJava 2.0, with usage of Single instead of Observable where it is relevant
  *
  * @author Sebastien Deleuze
  */
@@ -50,12 +50,12 @@ public class CouchbasePersonRepository {
 		this.repository = bucket.repository().toBlocking().first();
 	}
 
+	// TODO Use Completable when RxJava 1.1.1 will be released, see https://github.com/ReactiveX/RxJava/issues/3037
 	public Observable<Void> insert(Observable<Person> personStream) {
 		return personStream.flatMap(person -> {
 			String id = person.getFirstname() + "_" + person.getLastname();
 			EntityDocument doc = EntityDocument.create(id, person);
 			return this.repository.insert(doc);
-		// See https://github.com/ReactiveX/RxJava/issues/3037 about Observable<Void>
 		}).flatMap(document -> Observable.empty());
 	}
 

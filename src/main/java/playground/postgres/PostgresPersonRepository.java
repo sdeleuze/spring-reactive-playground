@@ -36,11 +36,11 @@ public class PostgresPersonRepository {
 		this.db = db;
 	}
 
+	// TODO Use Completable when RxJava 1.1.1 will be released, see https://github.com/ReactiveX/RxJava/issues/3037
 	public Observable<Void> insert(Observable<Person> personStream) {
 		return personStream.flatMap(p ->
 				db.querySet("insert into persons(firstname, lastname, address, postalCode, city) values($1, $2, $3, $4, $5)",
 				p.getFirstname(), p.getFirstname(), p.getAddress(), p.getPostalCode(), p.getCity())
-		// See https://github.com/ReactiveX/RxJava/issues/3037 about Observable<Void>
 		).flatMap(document -> Observable.empty());
 	}
 

@@ -12,7 +12,7 @@ apply plugin: 'propdeps'
 apply plugin: 'propdeps-idea'
 apply plugin: 'propdeps-maven'
 
-ext.reactorVersion = '2.1.0.BUILD-SNAPSHOT'
+ext.reactorVersion = '2.5.0.BUILD-SNAPSHOT'
 
 jar {
 	baseName = 'spring-reactive-playground'
