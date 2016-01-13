@@ -17,7 +17,8 @@
 package playground.postgres;
 
 import playground.Person;
-import rx.Observable;
+import reactor.Flux;
+import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,14 +41,21 @@ public class PostgresPersonController {
 	}
 
 	@RequestMapping(path = "/postgres", method = RequestMethod.POST)
-	public Observable<Void> create(@RequestBody Observable<Person> personStream) {
+	public Mono<Void> create(@RequestBody Flux<Person> personStream) {
 		return this.repository.insert(personStream);
 	}
 
 	@RequestMapping(path = "/postgres", method = RequestMethod.GET)
 	@ResponseBody
-	public Observable<Person> list() {
+	public Flux<Person> list() {
 		return this.repository.list();
+	}
+
+	// TODO Manage {@code @PathVariable}
+	@RequestMapping(path = "/postgres/1", method = RequestMethod.GET)
+	@ResponseBody
+	public Mono<Person> findById() {
+		return this.repository.findById("1");
 	}
 
 }

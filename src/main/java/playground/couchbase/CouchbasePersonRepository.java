@@ -21,9 +21,13 @@ import com.couchbase.client.java.document.EntityDocument;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.repository.AsyncRepository;
 
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import playground.Person;
+import playground.repository.ReactiveRepository;
+import reactor.Flux;
+import reactor.Mono;
 import rx.Observable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +40,7 @@ import org.springframework.stereotype.Repository;
  * @author Sebastien Deleuze
  */
 @Repository
-public class CouchbasePersonRepository {
+public class CouchbasePersonRepository implements ReactiveRepository<Person> {
 
 	private static final Logger logger = LoggerFactory.getLogger(CouchbasePersonRepository.class);
 
@@ -50,17 +54,18 @@ public class CouchbasePersonRepository {
 		this.repository = bucket.repository().toBlocking().first();
 	}
 
-	// TODO Use Completable when RxJava 1.1.1 will be released, see https://github.com/ReactiveX/RxJava/issues/3037
-	public Observable<Void> insert(Observable<Person> personStream) {
-		return personStream.flatMap(person -> {
-			String id = person.getFirstname() + "_" + person.getLastname();
+	@Override
+	public Mono<Void> insert(Publisher<Person> personStream) {
+		return Flux.from(personStream).flatMap(person -> {
+			String id = (person.getId() == null ? person.getFirstname() + "_" + person.getLastname() : person.getId());
 			EntityDocument doc = EntityDocument.create(id, person);
-			return this.repository.insert(doc);
-		}).flatMap(document -> Observable.empty());
+			return Flux.convert(this.repository.insert(doc));
+		}).after();
 	}
 
-	public Observable<Person> list() {
-		return this.bucket.query(N1qlQuery.simple("SELECT META(default).id FROM default"))
+	@Override
+	public Flux<Person> list() {
+		return Flux.convert(this.bucket.query(N1qlQuery.simple("SELECT META(default).id FROM default"))
 				.flatMap(result -> {
 					// Already discussed with Simon Baslé: AsyncN1qlQueryResult API does not make very easy to deal with errors
 					// since they are not emitted as errors in the main Observable<AsyncN1qlQueryRow>
@@ -75,7 +80,11 @@ public class CouchbasePersonRepository {
 					else {
 						return result.errors().flatMap(jsonErrors -> Observable.error(new IllegalStateException(jsonErrors.getInt("code") + ": " + jsonErrors.getString("msg"))));
 					}
-				});
+				}));
 	}
 
+	@Override
+	public Mono<Person> findById(String id) {
+		return Mono.convert(this.repository.get(id, Person.class).map(d -> d.content()));
+	}
 }

@@ -52,4 +52,11 @@ public class MongoPersonController {
 		return this.repository.list();
 	}
 
+	// TODO Manage {@code @PathVariable}
+	@RequestMapping(path = "/mongo/1", method = RequestMethod.GET)
+	@ResponseBody
+	public Mono<Person> findById() {
+		return this.repository.findById("1");
+	}
+
 }

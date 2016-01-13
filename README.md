@@ -10,37 +10,13 @@ You can have a look to the commented repository implementations for each support
 
 ## Usage
 
-URL to use are:
- - `http://localhost:8080/couchbase`
- - `http://localhost:8080/mongo` 
- - `http://localhost:8080/postgres`
-
-Supported methods are:
-
-`GET` request with `Accept: application/json` header:
+ - Create a single person: ```curl -i -X POST -H "Content-Type:application/json" -H "Accept: application/json" -d '{"id":"1","firstname":"foo1","lastname":"bar1"}' http://localhost:8080/postgres```
+ - Create a multiple persons: ```curl -i -X POST -H "Content-Type:application/json" -H "Accept: application/json" -d '[{"id":"2","firstname":"foo2","lastname":"bar2"},{"id":"3","firstname":"foo3","lastname":"bar3"}]' http://localhost:8080/postgres```
+ - List all the persons: ```curl -i -H "Accept: application/json" http://localhost:8080/postgres```
+ - Get one person: ```curl -i -H "Accept: application/json" http://localhost:8080/postgres/1```
  
-`POST`request with `Content-Type: application/json` header and the following body:
-```json
-{
-  "firstname": "foo",
-  "lastname": "bar"
-}
-```
-
-JSON arrays are also supported
-```json
-[
-  {
-    "firstname": "foo1",
-    "lastname": "bar1"
-  },
-  {
-    "firstname": "foo2",
-    "lastname": "bar2"
-  }
-]
-```
-
+Same for `http://localhost:8080/mongo` and `http://localhost:8080/couchbase`.
+ 
 ## License
 Spring Reactive Playground is released under version 2.0 of the [Apache License][].
 

@@ -28,13 +28,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PostgresConfiguration {
 
-	// You should create this table with the following query before using it:
-	// CREATE TABLE persons (firstname text, lastname text, address text, postalCode text, city text);
-	// You should also customize database, username and eventually set the password
 	@Bean
 	Db postgreSqlDb() {
-		return new ConnectionPoolBuilder().hostname("localhost").port(5432)
+		Db db = new ConnectionPoolBuilder().hostname("localhost").port(5432)
 				.database("seb").username("seb").poolSize(20).build();
+		db.query("CREATE TABLE IF NOT EXISTS persons (id text PRIMARY KEY, firstname text, lastname text)", resultSet -> {}, Throwable::printStackTrace);
+		return db;
 	}
 
 }

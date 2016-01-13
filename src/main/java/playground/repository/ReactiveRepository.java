@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-package playground.couchbase;
+package playground.repository;
 
-import com.couchbase.client.java.AsyncBucket;
-import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.CouchbaseCluster;
-import com.couchbase.client.java.query.N1qlQuery;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.reactivestreams.Publisher;
+import reactor.Flux;
+import reactor.Mono;
 
 /**
  * @author Sebastien Deleuze
  */
-@Configuration
-public class CouchbaseConfiguration {
+public interface ReactiveRepository<T> {
 
-	@Bean
-	AsyncBucket couchbaseDefaultBucket() {
-		CouchbaseCluster cluster = CouchbaseCluster.create("127.0.0.1");
-		Bucket bucket = cluster.openBucket("default");
-		bucket.query(N1qlQuery.simple("CREATE PRIMARY INDEX ON `default`"));
-		return bucket.async();
-	}
+	Mono<Void> insert(Publisher<T> elements);
+
+	Flux<T> list();
+
+	Mono<T> findById(String id);
 
 }

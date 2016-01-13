@@ -37,7 +37,7 @@ public class MongoConfiguration {
 
 	@Bean
 	MongoDatabase mongoDatabase() {
-		return MongoClients.create().getDatabase("reactive-playground");
+		return MongoClients.create().getDatabase("test");
 	}
 
 }

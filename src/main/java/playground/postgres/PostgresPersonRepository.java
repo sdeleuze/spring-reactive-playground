@@ -17,8 +17,11 @@
 package playground.postgres;
 
 import com.github.pgasync.Db;
+import org.reactivestreams.Publisher;
 import playground.Person;
-import rx.Observable;
+import playground.repository.ReactiveRepository;
+import reactor.Flux;
+import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,7 +30,7 @@ import org.springframework.stereotype.Repository;
  * @author Sebastien Deleuze
  */
 @Repository
-public class PostgresPersonRepository {
+public class PostgresPersonRepository implements ReactiveRepository<Person> {
 
 	private final Db db;
 
@@ -36,18 +39,24 @@ public class PostgresPersonRepository {
 		this.db = db;
 	}
 
-	// TODO Use Completable when RxJava 1.1.1 will be released, see https://github.com/ReactiveX/RxJava/issues/3037
-	public Observable<Void> insert(Observable<Person> personStream) {
-		return personStream.flatMap(p ->
-				db.querySet("insert into persons(firstname, lastname, address, postalCode, city) values($1, $2, $3, $4, $5)",
-				p.getFirstname(), p.getFirstname(), p.getAddress(), p.getPostalCode(), p.getCity())
-		).flatMap(document -> Observable.empty());
+	@Override
+	public Mono<Void> insert(Publisher<Person> personStream) {
+		return Flux.from(personStream).flatMap(p -> Flux.convert(
+				db.querySet("insert into persons(id, firstname, lastname) values($1, $2, $3)",
+				p.getId(), p.getFirstname(), p.getFirstname())
+		)).after();
 	}
 
-	public Observable<Person> list() {
-		return db.queryRows("select * from persons").map(row ->
-				new Person(row.getString("firstname"), row.getString("lastname"),
-						row.getString("address"), row.getString("postalCode"), row.getString("city"))
-		);
+	@Override
+	public Flux<Person> list() {
+		return Flux.convert(db.queryRows("select * from persons").map(row ->
+				new Person(row.getString("id"), row.getString("firstname"), row.getString("lastname"))));
 	}
+
+	@Override
+	public Mono<Person> findById(String id) {
+		return Mono.convert(db.queryRows("select * from persons where id='" + id + "'").map(row ->
+				new Person(row.getString("id"), row.getString("firstname"), row.getString("lastname"))));
+	}
+
 }
