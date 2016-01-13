@@ -3,7 +3,7 @@ Spring Reactive Playground is a sandbox for experimenting on applications based 
 
 ## Software design
 
-[ReactiveRepository][] shows what Reactive Spring Data interfaces could look like.
+[ReactiveRepository][] shows what Spring Data Reactive interfaces could look like.
 
 You can have a look to the commented repository implementations for each supported database:
  - [CouchbasePersonRepository][]
@@ -15,7 +15,7 @@ You can have a look to the commented repository implementations for each support
 Customize the configuration in `application.properties` (optionally use `profiles` to enable only the database you want to test), and run `Application#main()`.
 
  - Create a single person: ```curl -i -X POST -H "Content-Type:application/json" -H "Accept: application/json" -d '{"id":"1","firstname":"foo1","lastname":"bar1"}' http://localhost:8080/postgres```
- - Create a multiple persons: ```curl -i -X POST -H "Content-Type:application/json" -H "Accept: application/json" -d '[{"id":"2","firstname":"foo2","lastname":"bar2"},{"id":"3","firstname":"foo3","lastname":"bar3"}]' http://localhost:8080/postgres```
+ - Create multiple persons: ```curl -i -X POST -H "Content-Type:application/json" -H "Accept: application/json" -d '[{"id":"2","firstname":"foo2","lastname":"bar2"},{"id":"3","firstname":"foo3","lastname":"bar3"}]' http://localhost:8080/postgres```
  - List all the persons: ```curl -i -H "Accept: application/json" http://localhost:8080/postgres```
  - Get one person: ```curl -i -H "Accept: application/json" http://localhost:8080/postgres/1```
  
