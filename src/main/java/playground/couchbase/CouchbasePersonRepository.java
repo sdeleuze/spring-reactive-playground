@@ -31,6 +31,7 @@ import reactor.Mono;
 import rx.Observable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -39,6 +40,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author Sebastien Deleuze
  */
+@Profile("couchbase")
 @Repository
 public class CouchbasePersonRepository implements ReactiveRepository<Person> {
 

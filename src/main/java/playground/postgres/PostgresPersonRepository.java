@@ -24,11 +24,13 @@ import reactor.Flux;
 import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author Sebastien Deleuze
  */
+@Profile("postgres")
 @Repository
 public class PostgresPersonRepository implements ReactiveRepository<Person> {
 

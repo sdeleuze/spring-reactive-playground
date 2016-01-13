@@ -21,21 +21,30 @@ import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.query.N1qlQuery;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * @author Sebastien Deleuze
  */
+@Profile("couchbase")
 @Configuration
 public class CouchbaseConfiguration {
 
+	@Value("${couchbase.node}")
+	private String node;
+
+	@Value("${couchbase.bucket}")
+	private String bucket;
+
 	@Bean
 	AsyncBucket couchbaseDefaultBucket() {
-		CouchbaseCluster cluster = CouchbaseCluster.create("127.0.0.1");
-		Bucket bucket = cluster.openBucket("default");
-		bucket.query(N1qlQuery.simple("CREATE PRIMARY INDEX ON `default`"));
-		return bucket.async();
+		CouchbaseCluster cluster = CouchbaseCluster.create(node);
+		Bucket b = cluster.openBucket(bucket);
+		b.query(N1qlQuery.simple("CREATE PRIMARY INDEX ON `default`"));
+		return b.async();
 	}
 
 }

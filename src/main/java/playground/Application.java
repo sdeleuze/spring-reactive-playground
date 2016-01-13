@@ -17,11 +17,14 @@
 package playground;
 
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.codec.support.ByteBufferEncoder;
 import org.springframework.core.codec.support.JacksonJsonEncoder;
 import org.springframework.core.codec.support.JsonObjectEncoder;
@@ -45,9 +48,14 @@ import org.springframework.web.server.WebToHttpHandlerBuilder;
  * @author Sebastien Deleuze
  */
 @Configuration
+@PropertySource("classpath:application.properties")
 public class Application {
 
 	public static void main(String[] args) throws Exception {
+
+		Properties prop = new Properties();
+		prop.load(Application.class.getClassLoader().getResourceAsStream("application.properties"));
+		System.setProperty("spring.profiles.active", prop.getProperty("profiles"));
 
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("playground");
 		DispatcherHandler dispatcherHandler = new DispatcherHandler();
@@ -67,11 +75,9 @@ public class Application {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			stop.complete(null);
 		}));
-
 		synchronized (stop) {
 			stop.wait();
 		}
-
 	}
 
 	@Bean
@@ -104,6 +110,11 @@ public class Application {
 	@Bean
 	SimpleHandlerResultHandler simpleHandlerResultHandler() {
 		return new SimpleHandlerResultHandler(conversionService());
+	}
+
+	@Bean
+	public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
 	}
 
 }

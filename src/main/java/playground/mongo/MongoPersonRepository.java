@@ -31,6 +31,7 @@ import reactor.Flux;
 import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Repository;
  * Here, Reactive Streams one is used.
  * @author Sebastien Deleuze
  */
+@Profile("mongo")
 @Repository
 public class MongoPersonRepository implements ReactiveRepository<Person> {
 

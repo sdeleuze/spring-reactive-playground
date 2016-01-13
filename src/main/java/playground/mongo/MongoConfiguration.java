@@ -20,15 +20,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
  * @author Sebastien Deleuze
  */
+@Profile("mongo")
 @Configuration
 public class MongoConfiguration {
+
+	@Value("${mongo.database}")
+	private String database;
 
 	@Bean
 	ObjectMapper objectMapper() {
@@ -37,7 +43,7 @@ public class MongoConfiguration {
 
 	@Bean
 	MongoDatabase mongoDatabase() {
-		return MongoClients.create().getDatabase("test");
+		return MongoClients.create().getDatabase(database);
 	}
 
 }

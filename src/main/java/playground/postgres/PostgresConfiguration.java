@@ -19,19 +19,41 @@ package playground.postgres;
 import com.github.pgasync.ConnectionPoolBuilder;
 import com.github.pgasync.Db;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * @author Sebastien Deleuze
  */
+@Profile("postgres")
 @Configuration
 public class PostgresConfiguration {
 
+	@Value("${postgres.hostname}")
+	private String hostname;
+
+	@Value("${postgres.port}")
+	private int port;
+
+	@Value("${postgres.database}")
+	private String database;
+
+	@Value("${postgres.username}")
+	private String username;
+
+	@Value("${postgres.password}")
+	private String password;
+
+	@Value("${postgres.poolsize}")
+	private int poolSize;
+
+
 	@Bean
 	Db postgreSqlDb() {
-		Db db = new ConnectionPoolBuilder().hostname("localhost").port(5432)
-				.database("seb").username("seb").poolSize(20).build();
+		Db db = new ConnectionPoolBuilder().hostname(hostname).port(port)
+				.database(database).username("seb").password(password).poolSize(poolSize).build();
 		db.query("CREATE TABLE IF NOT EXISTS persons (id text PRIMARY KEY, firstname text, lastname text)", resultSet -> {}, Throwable::printStackTrace);
 		return db;
 	}
