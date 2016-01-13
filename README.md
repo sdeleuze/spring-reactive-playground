@@ -1,12 +1,14 @@
 Spring Reactive Playground is a sandbox for experimenting on applications based on
 [Spring Reactive][] Web support and async NoSQL drivers. .
 
-## Implementations
+## Software design
+
+[ReactiveRepository][] shows what Reactive Spring Data interfaces could look like.
 
 You can have a look to the commented repository implementations for each supported database:
- - [CouchbasePersonRepository](https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/couchbase/CouchbasePersonRepository.java)
- - [MongoPersonRepository](https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/mongo/MongoPersonRepository.java)
- - [PostgresPersonRepository](https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/postgres/PostgresPersonRepository.java)
+ - [CouchbasePersonRepository][]
+ - [MongoPersonRepository][]
+ - [PostgresPersonRepository][]
 
 ## Usage
 
@@ -22,5 +24,9 @@ Same for `http://localhost:8080/mongo` and `http://localhost:8080/couchbase`.
 ## License
 Spring Reactive Playground is released under version 2.0 of the [Apache License][].
 
+[ReactiveRepository]: https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/repository/ReactiveRepository.java
+[CouchbasePersonRepository]: https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/couchbase/CouchbasePersonRepository.java
+[MongoPersonRepository]: https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/mongo/MongoPersonRepository.java
+[PostgresPersonRepository]: https://github.com/sdeleuze/spring-reactive-playground/blob/master/src/main/java/playground/postgres/PostgresPersonRepository.java
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
 [Spring Reactive]: https://github.com/spring-projects/spring-reactive
