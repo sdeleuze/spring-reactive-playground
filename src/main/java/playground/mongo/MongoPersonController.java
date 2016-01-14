@@ -23,17 +23,16 @@ import reactor.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Sebastien Deleuze
  */
 @Profile("mongo")
-@Controller
+@RestController
 public class MongoPersonController {
 
 	private final MongoPersonRepository repository;
@@ -49,14 +48,12 @@ public class MongoPersonController {
 	}
 
 	@RequestMapping(path = "/mongo", method = RequestMethod.GET)
-	@ResponseBody
 	public Flux<Person> list() {
 		return this.repository.list();
 	}
 
 	// TODO Manage {@code @PathVariable}
 	@RequestMapping(path = "/mongo/1", method = RequestMethod.GET)
-	@ResponseBody
 	public Mono<Person> findById() {
 		return this.repository.findById("1");
 	}
