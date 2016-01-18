@@ -18,6 +18,7 @@ package playground.mongo;
 
 import org.reactivestreams.Publisher;
 import playground.Person;
+import playground.repository.ReactiveRepository;
 import reactor.Flux;
 import reactor.Mono;
 
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MongoPersonController {
 
-	private final MongoPersonRepository repository;
+	private final ReactiveRepository<Person> repository;
 
 	@Autowired
 	public MongoPersonController(MongoPersonRepository repository) {

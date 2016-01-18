@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package playground.postgres;
+package playground.couchbase;
 
 import playground.Person;
-import playground.repository.ReactiveRepository;
-import reactor.Flux;
-import reactor.Mono;
+import playground.repository.RxJavaRepository;
+import playground.repository.RxJavaRepositoryAdapter;
+import rx.Observable;
+import rx.Single;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -31,30 +32,30 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author Sebastien Deleuze
  */
-@Profile("postgres")
+@Profile("couchbase")
 @RestController
-public class PostgresPersonController {
+public class RxJavaCouchbasePersonController {
 
-	private final ReactiveRepository<Person> repository;
+	private final RxJavaRepository<Person> repository;
 
 	@Autowired
-	public PostgresPersonController(PostgresPersonRepository repository) {
-		this.repository = repository;
+	public RxJavaCouchbasePersonController(CouchbasePersonRepository repository) {
+		this.repository = new RxJavaRepositoryAdapter<>(repository);
 	}
 
-	@RequestMapping(path = "/postgres", method = RequestMethod.POST)
-	public Mono<Void> create(@RequestBody Flux<Person> personStream) {
+	@RequestMapping(path = "/rxjava/couchbase", method = RequestMethod.POST)
+	public Single<Void> create(@RequestBody Observable<Person> personStream) {
 		return this.repository.insert(personStream);
 	}
 
-	@RequestMapping(path = "/postgres", method = RequestMethod.GET)
-	public Flux<Person> list() {
+	@RequestMapping(path = "/rxjava/couchbase", method = RequestMethod.GET)
+	public Observable<Person> list() {
 		return this.repository.list();
 	}
 
 	// TODO Manage {@code @PathVariable}
-	@RequestMapping(path = "/postgres/1", method = RequestMethod.GET)
-	public Mono<Person> findById() {
+	@RequestMapping(path = "/rxjava/couchbase/1", method = RequestMethod.GET)
+	public Single<Person> findById() {
 		return this.repository.findById("1");
 	}
 

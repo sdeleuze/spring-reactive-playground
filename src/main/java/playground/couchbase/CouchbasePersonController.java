@@ -17,6 +17,7 @@
 package playground.couchbase;
 
 import playground.Person;
+import playground.repository.ReactiveRepository;
 import reactor.Flux;
 import reactor.Mono;
 
@@ -34,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CouchbasePersonController {
 
-	private final CouchbasePersonRepository repository;
+	private final ReactiveRepository<Person> repository;
 
 	@Autowired
 	public CouchbasePersonController(CouchbasePersonRepository repository) {
