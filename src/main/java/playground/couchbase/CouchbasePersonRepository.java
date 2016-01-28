@@ -26,8 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import playground.Person;
 import playground.repository.ReactiveRepository;
-import reactor.Flux;
-import reactor.Mono;
+import reactor.core.converter.RxJava1ObservableConverter;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import rx.Observable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,13 +62,13 @@ public class CouchbasePersonRepository implements ReactiveRepository<Person> {
 		return Flux.from(personStream).flatMap(person -> {
 			String id = (person.getId() == null ? person.getFirstname() + "_" + person.getLastname() : person.getId());
 			EntityDocument doc = EntityDocument.create(id, person);
-			return Flux.convert(this.repository.insert(doc));
+			return RxJava1ObservableConverter.from(this.repository.insert(doc));
 		}).after();
 	}
 
 	@Override
 	public Flux<Person> list() {
-		return Flux.convert(this.bucket.query(N1qlQuery.simple("SELECT META(default).id FROM default"))
+		return RxJava1ObservableConverter.from(this.bucket.query(N1qlQuery.simple("SELECT META(default).id FROM default"))
 				.flatMap(result -> {
 					// Already discussed with Simon Baslé: AsyncN1qlQueryResult API does not make very easy to deal with errors
 					// since they are not emitted as errors in the main Observable<AsyncN1qlQueryRow>
@@ -87,6 +88,6 @@ public class CouchbasePersonRepository implements ReactiveRepository<Person> {
 
 	@Override
 	public Mono<Person> findById(String id) {
-		return Mono.convert(this.repository.get(id, Person.class).map(d -> d.content()));
+		return Mono.from(RxJava1ObservableConverter.from(this.repository.get(id, Person.class).map(d -> d.content())));
 	}
 }

@@ -17,8 +17,8 @@
 package playground.repository;
 
 import org.reactivestreams.Publisher;
-import reactor.Flux;
-import reactor.Mono;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Sebastien Deleuze

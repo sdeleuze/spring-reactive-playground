@@ -20,8 +20,9 @@ import com.github.pgasync.Db;
 import org.reactivestreams.Publisher;
 import playground.Person;
 import playground.repository.ReactiveRepository;
-import reactor.Flux;
-import reactor.Mono;
+import reactor.core.converter.RxJava1ObservableConverter;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -43,7 +44,7 @@ public class PostgresPersonRepository implements ReactiveRepository<Person> {
 
 	@Override
 	public Mono<Void> insert(Publisher<Person> personStream) {
-		return Flux.from(personStream).flatMap(p -> Flux.convert(
+		return Flux.from(personStream).flatMap(p -> RxJava1ObservableConverter.from(
 				db.querySet("insert into persons(id, firstname, lastname) values($1, $2, $3)",
 				p.getId(), p.getFirstname(), p.getFirstname())
 		)).after();
@@ -51,14 +52,14 @@ public class PostgresPersonRepository implements ReactiveRepository<Person> {
 
 	@Override
 	public Flux<Person> list() {
-		return Flux.convert(db.queryRows("select * from persons").map(row ->
+		return RxJava1ObservableConverter.from(db.queryRows("select * from persons").map(row ->
 				new Person(row.getString("id"), row.getString("firstname"), row.getString("lastname"))));
 	}
 
 	@Override
 	public Mono<Person> findById(String id) {
-		return Mono.convert(db.queryRows("select * from persons where id='" + id + "'").map(row ->
-				new Person(row.getString("id"), row.getString("firstname"), row.getString("lastname"))));
+		return Mono.from(RxJava1ObservableConverter.from(db.queryRows("select * from persons where id='" + id + "'").map(row ->
+				new Person(row.getString("id"), row.getString("firstname"), row.getString("lastname")))));
 	}
 
 }

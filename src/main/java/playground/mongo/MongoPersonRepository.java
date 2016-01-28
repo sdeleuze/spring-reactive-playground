@@ -27,8 +27,8 @@ import org.bson.Document;
 import org.reactivestreams.Publisher;
 import playground.Person;
 import playground.repository.ReactiveRepository;
-import reactor.Flux;
-import reactor.Mono;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

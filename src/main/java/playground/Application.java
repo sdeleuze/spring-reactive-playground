@@ -33,6 +33,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
 import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
+import org.springframework.core.io.buffer.DataBufferAllocator;
+import org.springframework.core.io.buffer.DefaultDataBufferAllocator;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.boot.HttpServer;
 import org.springframework.http.server.reactive.boot.ReactorHttpServer;
@@ -42,7 +44,7 @@ import org.springframework.web.reactive.handler.SimpleHandlerResultHandler;
 import org.springframework.web.reactive.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.reactive.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.reactive.method.annotation.ResponseBodyResultHandler;
-import org.springframework.web.server.WebToHttpHandlerBuilder;
+import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
 /**
  * @author Sebastien Deleuze
@@ -61,7 +63,7 @@ public class Application {
 		DispatcherHandler dispatcherHandler = new DispatcherHandler();
 		dispatcherHandler.setApplicationContext(context);
 
-		HttpHandler httpHandler = WebToHttpHandlerBuilder.webHandler(dispatcherHandler)
+		HttpHandler httpHandler = WebHttpHandlerBuilder.webHandler(dispatcherHandler)
 				.exceptionHandlers(new ResponseStatusExceptionHandler())
 				.build();
 
@@ -78,6 +80,11 @@ public class Application {
 		synchronized (stop) {
 			stop.wait();
 		}
+	}
+
+	@Bean
+	DataBufferAllocator bufferAllocator() {
+		return new DefaultDataBufferAllocator();
 	}
 
 	@Bean
@@ -101,10 +108,10 @@ public class Application {
 	}
 
 	@Bean
-	ResponseBodyResultHandler responseBodyResultHandler() {
+	ResponseBodyResultHandler responseBodyResultHandler(DataBufferAllocator bufferAllocator) {
 		return new ResponseBodyResultHandler(Arrays.asList(
-				new ByteBufferEncoder(), new StringEncoder(),
-				new JacksonJsonEncoder(new JsonObjectEncoder())), conversionService());
+				new ByteBufferEncoder(bufferAllocator), new StringEncoder(bufferAllocator),
+				new JacksonJsonEncoder(bufferAllocator, new JsonObjectEncoder(bufferAllocator))), conversionService());
 	}
 
 	@Bean
