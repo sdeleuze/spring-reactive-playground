@@ -26,7 +26,6 @@ configurations.all {
 }
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	maven { url 'http://repo.spring.io/snapshot' }  // Spring Reactive and Reactor snapshot
 }
