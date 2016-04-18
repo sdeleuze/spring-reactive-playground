@@ -12,8 +12,6 @@ apply plugin: 'propdeps'
 apply plugin: 'propdeps-idea'
 apply plugin: 'propdeps-maven'
 
-ext.reactorVersion = '2.5.0.BUILD-SNAPSHOT'
-
 jar {
 	baseName = 'spring-reactive-playground'
 }
@@ -27,17 +25,15 @@ configurations.all {
 
 repositories {
 	mavenCentral()
+	maven { url 'http://repo.spring.io/milestone' }
 	maven { url 'http://repo.spring.io/snapshot' }  // Spring Reactive and Reactor snapshot
 }
 
 dependencies {
 	compile "org.springframework.reactive:spring-reactive:0.1.0.BUILD-SNAPSHOT"
-	compile "com.fasterxml.jackson.core:jackson-databind:2.6.1"
+	compile "com.fasterxml.jackson.core:jackson-databind:2.7.3"
 
-	compile "io.projectreactor:reactor-net:${reactorVersion}"
-	compile "io.projectreactor:reactor-stream:${reactorVersion}"
-	compile "io.netty:netty-codec-http:4.0.31.Final"
-	compile "io.netty:netty-transport-native-epoll:4.0.31.Final"
+	compile "io.projectreactor:reactor-netty:2.5.0.BUILD-SNAPSHOT"
 
 	compile "org.mongodb:mongodb-driver-reactivestreams:1.1.0"
 	compile "com.couchbase.client:java-client:2.2.2"

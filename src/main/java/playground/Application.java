@@ -27,7 +27,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.codec.support.ByteBufferEncoder;
 import org.springframework.core.codec.support.JacksonJsonEncoder;
-import org.springframework.core.codec.support.JsonObjectEncoder;
 import org.springframework.core.codec.support.StringEncoder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
@@ -40,10 +39,10 @@ import org.springframework.http.server.reactive.boot.HttpServer;
 import org.springframework.http.server.reactive.boot.ReactorHttpServer;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.ResponseStatusExceptionHandler;
-import org.springframework.web.reactive.handler.SimpleHandlerResultHandler;
-import org.springframework.web.reactive.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.reactive.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.reactive.method.annotation.ResponseBodyResultHandler;
+import org.springframework.web.reactive.result.SimpleResultHandler;
+import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
 /**
@@ -108,15 +107,15 @@ public class Application {
 	}
 
 	@Bean
-	ResponseBodyResultHandler responseBodyResultHandler(DataBufferAllocator bufferAllocator) {
+	ResponseBodyResultHandler responseBodyResultHandler() {
 		return new ResponseBodyResultHandler(Arrays.asList(
-				new ByteBufferEncoder(bufferAllocator), new StringEncoder(bufferAllocator),
-				new JacksonJsonEncoder(bufferAllocator, new JsonObjectEncoder(bufferAllocator))), conversionService());
+				new ByteBufferEncoder(), new StringEncoder(),
+				new JacksonJsonEncoder()), conversionService());
 	}
 
 	@Bean
-	SimpleHandlerResultHandler simpleHandlerResultHandler() {
-		return new SimpleHandlerResultHandler(conversionService());
+	SimpleResultHandler simpleHandlerResultHandler() {
+		return new SimpleResultHandler(conversionService());
 	}
 
 	@Bean
