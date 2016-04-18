@@ -32,8 +32,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
 import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
-import org.springframework.core.io.buffer.DataBufferAllocator;
-import org.springframework.core.io.buffer.DefaultDataBufferAllocator;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.boot.HttpServer;
 import org.springframework.http.server.reactive.boot.ReactorHttpServer;
@@ -79,11 +77,6 @@ public class Application {
 		synchronized (stop) {
 			stop.wait();
 		}
-	}
-
-	@Bean
-	DataBufferAllocator bufferAllocator() {
-		return new DefaultDataBufferAllocator();
 	}
 
 	@Bean
