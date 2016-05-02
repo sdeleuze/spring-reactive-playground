@@ -16,7 +16,9 @@
 
 package playground;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,13 +27,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.codec.support.ByteBufferDecoder;
 import org.springframework.core.codec.support.ByteBufferEncoder;
+import org.springframework.core.codec.support.JacksonJsonDecoder;
 import org.springframework.core.codec.support.JacksonJsonEncoder;
+import org.springframework.core.codec.support.StringDecoder;
 import org.springframework.core.codec.support.StringEncoder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
 import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
+import org.springframework.http.converter.reactive.CodecHttpMessageConverter;
+import org.springframework.http.converter.reactive.HttpMessageConverter;
+import org.springframework.http.converter.reactive.ResourceHttpMessageConverter;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.boot.HttpServer;
 import org.springframework.http.server.reactive.boot.ReactorHttpServer;
@@ -101,9 +109,12 @@ public class Application {
 
 	@Bean
 	ResponseBodyResultHandler responseBodyResultHandler() {
-		return new ResponseBodyResultHandler(Arrays.asList(
-				new ByteBufferEncoder(), new StringEncoder(),
-				new JacksonJsonEncoder()), conversionService());
+		List<HttpMessageConverter<?>> converters =
+					Arrays.asList(new ResourceHttpMessageConverter(),
+							new CodecHttpMessageConverter<String>(new StringEncoder(), new StringDecoder()),
+							new CodecHttpMessageConverter<Object>(new JacksonJsonEncoder(), new JacksonJsonDecoder()));
+
+		return new ResponseBodyResultHandler(converters, conversionService());
 	}
 
 	@Bean
