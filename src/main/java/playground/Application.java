@@ -16,7 +16,6 @@
 
 package playground;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -27,8 +26,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.codec.support.ByteBufferDecoder;
-import org.springframework.core.codec.support.ByteBufferEncoder;
 import org.springframework.core.codec.support.JacksonJsonDecoder;
 import org.springframework.core.codec.support.JacksonJsonEncoder;
 import org.springframework.core.codec.support.StringDecoder;
@@ -40,9 +37,13 @@ import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converte
 import org.springframework.http.converter.reactive.CodecHttpMessageConverter;
 import org.springframework.http.converter.reactive.HttpMessageConverter;
 import org.springframework.http.converter.reactive.ResourceHttpMessageConverter;
+import org.springframework.http.converter.reactive.SseHttpMessageConverter;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.boot.HttpServer;
+import org.springframework.http.server.reactive.boot.JettyHttpServer;
 import org.springframework.http.server.reactive.boot.ReactorHttpServer;
+import org.springframework.http.server.reactive.boot.RxNettyHttpServer;
+import org.springframework.http.server.reactive.boot.TomcatHttpServer;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.ResponseStatusExceptionHandler;
 import org.springframework.web.reactive.result.SimpleResultHandler;
@@ -110,7 +111,9 @@ public class Application {
 	@Bean
 	ResponseBodyResultHandler responseBodyResultHandler() {
 		List<HttpMessageConverter<?>> converters =
-					Arrays.asList(new ResourceHttpMessageConverter(),
+					Arrays.asList(
+							new ResourceHttpMessageConverter(),
+							new SseHttpMessageConverter(),
 							new CodecHttpMessageConverter<String>(new StringEncoder(), new StringDecoder()),
 							new CodecHttpMessageConverter<Object>(new JacksonJsonEncoder(), new JacksonJsonDecoder()));
 
