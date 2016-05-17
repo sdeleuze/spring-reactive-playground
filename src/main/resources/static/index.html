@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE example</title>
+</head>
+<p>
+
+    <p>
+        SSE with String: <ul id="string-events"></ul>
+    </p>
+
+    <p>
+        SSE with Person: <ul id="person-events"></ul>
+    </p>
+
+    <p>
+        SSE with raw events: <ul id="raw-events"></ul>
+    </p>
+
+    </ul>
+    </p>
+    <script type="application/javascript">
+
+        var stringEvents = document.getElementById("string-events");
+        var stringEventSource = new EventSource("/sse/string");
+        stringEventSource.onmessage = function(e) {
+          var newElement = document.createElement("li");
+          newElement.innerHTML = "Message: " + e.data;
+          stringEvents.appendChild(newElement);
+        }
+
+        var personEvents = document.getElementById("person-events");
+        var personEventSource = new EventSource("/sse/person");
+        personEventSource.onmessage = function(e) {
+          var newElement = document.createElement("li");
+          var person = JSON.parse(e.data);
+          newElement.innerHTML = "Person: id=" + person.id + ", firstname=" + person.firstname + ", lastname=" + person.lastname;
+          personEvents.appendChild(newElement);
+        }
+
+        var rawEvents = document.getElementById("raw-events");
+        var rawEventSource = new EventSource("/sse-raw");
+        rawEventSource.onmessage = function(e) {
+          var newElement = document.createElement("li");
+          newElement.innerHTML = "Event: id=" + e.lastEventId + ", data=" + e.data;
+          rawEvents.appendChild(newElement);
+        }
+
+    </script>
+</body>
+</html>
