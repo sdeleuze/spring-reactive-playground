@@ -47,7 +47,7 @@ public class PostgresPersonRepository implements ReactiveRepository<Person> {
 		return Flux.from(personStream).flatMap(p -> RxJava1ObservableConverter.from(
 				db.querySet("insert into persons(id, firstname, lastname) values($1, $2, $3)",
 				p.getId(), p.getFirstname(), p.getFirstname())
-		)).after();
+		)).then();
 	}
 
 	@Override

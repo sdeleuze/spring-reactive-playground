@@ -16,23 +16,24 @@
 
 package playground.mongo;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.bson.Document;
 import org.reactivestreams.Publisher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository;
 import playground.Person;
 import playground.repository.ReactiveRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
+import java.io.IOException;
+
+
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * MongoDB async driver is available as Reactive Streams and RxJava.
@@ -62,7 +63,7 @@ public class MongoPersonRepository implements ReactiveRepository<Person> {
 			catch (JsonProcessingException ex) {
 				return Mono.error(ex);
 			}
-		}).after();
+		}).then();
 	}
 
 	@Override
