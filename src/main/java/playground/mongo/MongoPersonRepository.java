@@ -62,7 +62,7 @@ public class MongoPersonRepository implements ReactiveRepository<Person> {
 			catch (JsonProcessingException ex) {
 				return Mono.error(ex);
 			}
-		}).after();
+		}).then();
 	}
 
 	@Override
