@@ -63,7 +63,7 @@ public class CouchbasePersonRepository implements ReactiveRepository<Person> {
 			String id = (person.getId() == null ? person.getFirstname() + "_" + person.getLastname() : person.getId());
 			EntityDocument doc = EntityDocument.create(id, person);
 			return RxJava1ObservableConverter.from(this.repository.insert(doc));
-		}).after();
+		}).then();
 	}
 
 	@Override
