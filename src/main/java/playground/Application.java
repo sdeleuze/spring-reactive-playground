@@ -16,19 +16,11 @@
 
 package playground;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
-
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.codec.support.ByteBufferDecoder;
-import org.springframework.core.codec.support.ByteBufferEncoder;
 import org.springframework.core.codec.support.JacksonJsonDecoder;
 import org.springframework.core.codec.support.JacksonJsonEncoder;
 import org.springframework.core.codec.support.StringDecoder;
@@ -50,6 +42,11 @@ import org.springframework.web.reactive.result.method.annotation.RequestMappingH
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Sebastien Deleuze
