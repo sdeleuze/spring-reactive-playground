@@ -35,9 +35,9 @@ dependencies {
 
 	compile "io.projectreactor:reactor-netty:2.5.0.BUILD-SNAPSHOT"
 
-	compile "org.mongodb:mongodb-driver-reactivestreams:1.1.0"
-	compile "com.couchbase.client:java-client:2.2.2"
-	compile "com.github.alaisi.pgasync:postgres-async-driver:0.7"
+	compile "org.mongodb:mongodb-driver-reactivestreams:1.2.0"
+	compile "com.couchbase.client:java-client:2.2.7"
+	compile "com.github.alaisi.pgasync:postgres-async-driver:0.8"
 
 	compile "org.slf4j:slf4j-jcl:1.7.12"
 	compile "org.slf4j:jul-to-slf4j:1.7.12"
