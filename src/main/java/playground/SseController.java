@@ -29,22 +29,28 @@ public class SseController {
 
 	@RequestMapping("/sse/string")
 	Flux<String> string() {
-		return Flux.interval(Duration.ofSeconds(1)).map(l -> "foo " + l);
+		return Flux
+			.interval(Duration.ofSeconds(1))
+			.map(l -> "foo " + l);
 	}
 
 	@RequestMapping("/sse/person")
 	Flux<Person> person() {
-		return Flux.interval(Duration.ofSeconds(1)).map(l -> new Person(Long.toString(l), "foo", "bar"));
+		return Flux
+			.interval(Duration.ofSeconds(1))
+			.map(l -> new Person(Long.toString(l), "foo", "bar"));
 	}
 
 	@RequestMapping("/sse-raw")
 	Flux<SseEvent> sse() {
-		return Flux.interval(Duration.ofSeconds(1)).map(l -> {
-			SseEvent event = new SseEvent();
-			event.setId(Long.toString(l));
-			event.setData("foo\nbar");
-			event.setComment("bar\nbaz");
-			return event;
+		return Flux
+			.interval(Duration.ofSeconds(1))
+			.map(l -> {
+				SseEvent event = new SseEvent();
+				event.setId(Long.toString(l));
+				event.setData("foo\nbar");
+				event.setComment("bar\nbaz");
+				return event;
 		});
 	}
 
