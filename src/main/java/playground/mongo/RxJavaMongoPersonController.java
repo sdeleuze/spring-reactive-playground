@@ -17,8 +17,6 @@
 package playground.mongo;
 
 import playground.Person;
-import playground.repository.RxJavaRepository;
-import playground.repository.RxJavaRepositoryAdapter;
 import rx.Observable;
 import rx.Single;
 
@@ -31,32 +29,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Sebastien Deleuze
+ * @author Mark Paluch
  */
 @Profile("mongo")
 @RestController
 public class RxJavaMongoPersonController {
 
-	private final RxJavaRepository<Person> repository;
+	private final ReactiveMongoRxJavaPersonRepository repository;
 
 	@Autowired
-	public RxJavaMongoPersonController(MongoPersonRepository repository) {
-		this.repository = new RxJavaRepositoryAdapter<>(repository);
+	public RxJavaMongoPersonController(ReactiveMongoRxJavaPersonRepository repository) {
+		this.repository = repository;
 	}
 
 	@RequestMapping(path = "/rxjava/mongo", method = RequestMethod.POST)
-	public Single<Void> create(@RequestBody Observable<Person> personStream) {
-		return this.repository.insert(personStream);
+	public Observable<Person> create(@RequestBody Observable<Person> personStream) {
+		return this.repository.save(personStream);
 	}
 
 	@RequestMapping(path = "/rxjava/mongo", method = RequestMethod.GET)
 	public Observable<Person> list() {
-		return this.repository.list();
+		return this.repository.findAll();
 	}
 
 	// TODO Manage {@code @PathVariable}
 	@RequestMapping(path = "/rxjava/mongo/1", method = RequestMethod.GET)
 	public Single<Person> findById() {
-		return this.repository.findById("1");
+		return this.repository.findOne("1");
 	}
 
 }

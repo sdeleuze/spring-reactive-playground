@@ -18,7 +18,6 @@ package playground.mongo;
 
 import org.reactivestreams.Publisher;
 import playground.Person;
-import playground.repository.ReactiveRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -31,32 +30,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Sebastien Deleuze
+ * @author Mark Paluch
  */
 @Profile("mongo")
 @RestController
 public class MongoPersonController {
 
-	private final ReactiveRepository<Person> repository;
+	private final ReactiveMongoPersonRepository repository;
 
 	@Autowired
-	public MongoPersonController(MongoPersonRepository repository) {
+	public MongoPersonController(ReactiveMongoPersonRepository repository) {
 		this.repository = repository;
 	}
 
 	@RequestMapping(path = "/mongo", method = RequestMethod.POST)
 	public Mono<Void> create(@RequestBody Publisher<Person> personStream) {
-		return this.repository.insert(personStream);
+		return this.repository.save(personStream).then();
 	}
 
 	@RequestMapping(path = "/mongo", method = RequestMethod.GET)
 	public Flux<Person> list() {
-		return this.repository.list();
+		return this.repository.findAll();
 	}
 
 	// TODO Manage {@code @PathVariable}
 	@RequestMapping(path = "/mongo/1", method = RequestMethod.GET)
 	public Mono<Person> findById() {
-		return this.repository.findById("1");
+		return this.repository.findOne("1");
 	}
 
 }
