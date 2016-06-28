@@ -22,6 +22,7 @@ import rx.Single;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,10 +53,9 @@ public class RxJavaMongoPersonController {
 		return this.repository.findAll();
 	}
 
-	// TODO Manage {@code @PathVariable}
-	@RequestMapping(path = "/rxjava/mongo/1", method = RequestMethod.GET)
-	public Single<Person> findById() {
-		return this.repository.findOne("1");
+	@RequestMapping(path = "/rxjava/mongo/{id}", method = RequestMethod.GET)
+	public Single<Person> findById(@PathVariable String id) {
+		return this.repository.findOne(id);
 	}
 
 }

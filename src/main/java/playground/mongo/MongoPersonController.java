@@ -23,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,10 +54,9 @@ public class MongoPersonController {
 		return this.repository.findAll();
 	}
 
-	// TODO Manage {@code @PathVariable}
-	@RequestMapping(path = "/mongo/1", method = RequestMethod.GET)
-	public Mono<Person> findById() {
-		return this.repository.findOne("1");
+	@RequestMapping(path = "/mongo/{id}", method = RequestMethod.GET)
+	public Mono<Person> findById(@PathVariable String id) {
+		return this.repository.findOne(id);
 	}
 
 }
