@@ -20,7 +20,6 @@ import playground.Person;
 import rx.Observable;
 import rx.Single;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +37,6 @@ public class RxJavaMongoPersonController {
 
 	private final ReactiveMongoRxJavaPersonRepository repository;
 
-	@Autowired
 	public RxJavaMongoPersonController(ReactiveMongoRxJavaPersonRepository repository) {
 		this.repository = repository;
 	}
