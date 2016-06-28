@@ -16,8 +16,6 @@
 
 package playground;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,27 +24,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.codec.support.JacksonJsonDecoder;
-import org.springframework.core.codec.support.JacksonJsonEncoder;
-import org.springframework.core.codec.support.StringDecoder;
-import org.springframework.core.codec.support.StringEncoder;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.core.convert.support.ReactiveStreamsToCompletableFutureConverter;
-import org.springframework.core.convert.support.ReactiveStreamsToRxJava1Converter;
-import org.springframework.http.codec.SseEventEncoder;
-import org.springframework.http.converter.reactive.CodecHttpMessageConverter;
-import org.springframework.http.converter.reactive.HttpMessageConverter;
-import org.springframework.http.converter.reactive.ResourceHttpMessageConverter;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.boot.HttpServer;
-import org.springframework.http.server.reactive.boot.ReactorHttpServer;
+import org.springframework.http.server.reactive.boot.TomcatHttpServer;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.ResponseStatusExceptionHandler;
-import org.springframework.web.reactive.result.SimpleResultHandler;
-import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler;
+import org.springframework.web.reactive.config.WebReactiveConfiguration;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
 /**
@@ -54,7 +37,7 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
  */
 @Configuration
 @PropertySource("classpath:application.properties")
-public class Application {
+public class Application extends WebReactiveConfiguration {
 
 	public static void main(String[] args) throws Exception {
 
@@ -63,6 +46,7 @@ public class Application {
 		System.setProperty("spring.profiles.active", prop.getProperty("profiles"));
 
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("playground");
+
 		DispatcherHandler dispatcherHandler = new DispatcherHandler();
 		dispatcherHandler.setApplicationContext(context);
 
@@ -70,7 +54,7 @@ public class Application {
 				.exceptionHandlers(new ResponseStatusExceptionHandler())
 				.build();
 
-		HttpServer server = new ReactorHttpServer();
+		HttpServer server = new TomcatHttpServer();
 		server.setPort(8080);
 		server.setHandler(httpHandler);
 		server.afterPropertiesSet();
@@ -83,43 +67,6 @@ public class Application {
 		synchronized (stop) {
 			stop.wait();
 		}
-	}
-
-	@Bean
-	RequestMappingHandlerMapping handlerMapping() {
-		return new RequestMappingHandlerMapping();
-	}
-
-	@Bean
-	RequestMappingHandlerAdapter handlerAdapter() {
-		RequestMappingHandlerAdapter handlerAdapter = new RequestMappingHandlerAdapter();
-		handlerAdapter.setConversionService(conversionService());
-		return handlerAdapter;
-	}
-
-	@Bean
-	ConversionService conversionService() {
-		GenericConversionService service = new GenericConversionService();
-		service.addConverter(new ReactiveStreamsToCompletableFutureConverter());
-		service.addConverter(new ReactiveStreamsToRxJava1Converter());
-		return service;
-	}
-
-	@Bean
-	ResponseBodyResultHandler responseBodyResultHandler() {
-		List<HttpMessageConverter<?>> converters =
-					Arrays.asList(
-							new ResourceHttpMessageConverter(),
-							new CodecHttpMessageConverter<>(new SseEventEncoder(Arrays.asList(new JacksonJsonEncoder()))),
-							new CodecHttpMessageConverter<>(new StringEncoder(), new StringDecoder()),
-							new CodecHttpMessageConverter<>(new JacksonJsonEncoder(), new JacksonJsonDecoder()));
-
-		return new ResponseBodyResultHandler(converters, conversionService());
-	}
-
-	@Bean
-	SimpleResultHandler simpleHandlerResultHandler() {
-		return new SimpleResultHandler(conversionService());
 	}
 
 	@Bean
