@@ -18,9 +18,20 @@ jar {
 
 group = 'org.springframework.reactive'
 
+ext {
+	nettyVersion = '4.1.2.Final'
+}
+
 configurations.all {
 	// check for updates every build
 	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+		// consistent netty version to avoid issues with clashes in netty-all vs
+		// netty-common for example
+		if (details.requested.group == 'io.netty') {
+			details.useVersion nettyVersion
+		}
+	}
 }
 
 repositories {
