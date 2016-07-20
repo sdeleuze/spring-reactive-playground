@@ -20,9 +20,9 @@ import java.time.Duration;
 
 import reactor.core.publisher.Flux;
 
+import org.springframework.http.codec.SseEvent;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.sse.SseEvent;
 
 @RestController
 public class SseController {
