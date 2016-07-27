@@ -3,6 +3,7 @@ buildscript {
 		springBootVersion = '1.4.0.BUILD-SNAPSHOT'
 	}
 	repositories {
+		mavenLocal()
 		mavenCentral()
 		maven { url "https://repo.spring.io/snapshot" }
 		maven { url "https://repo.spring.io/milestone" }
@@ -21,18 +22,21 @@ jar {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
-	maven { url 'https://oss.jfrog.org/libs-snapshot' }  // RxNetty 0.5.x snapshots
 	maven { url "https://repo.spring.io/snapshot" }
 	maven { url "https://repo.spring.io/milestone" }
 }
 
-ext['reactor.version'] = '3.0.0.BUILD-SNAPSHOT'
-ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.boot.experimental:spring-boot-dependencies-web-reactive:0.1.0.BUILD-SNAPSHOT"
+	}
+}
 
 dependencies {
 	// Use Tomcat by default
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT')
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive')
 
 	compile "io.reactivex:rxjava:1.1.6"
 
@@ -42,19 +46,19 @@ dependencies {
 
 	// With Reactor Netty
 	/*
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.projectreactor:reactor-netty:0.5.0.BUILD-SNAPSHOT"
+	compile "io.projectreactor.ipc:reactor-netty"
     */
 
 	// With RxNetty
 	/*
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.reactivex:rxnetty-common:0.5.2-SNAPSHOT"
-	compile "io.reactivex:rxnetty-http:0.5.2-SNAPSHOT"
+	compile "io.reactivex:rxnetty-common"
+	compile "io.reactivex:rxnetty-http"
     */
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
