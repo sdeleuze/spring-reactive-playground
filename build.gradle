@@ -23,6 +23,7 @@ repositories {
     mavenLocal()
 	mavenCentral()
 	maven { url 'https://oss.jfrog.org/libs-snapshot' }  // RxNetty 0.5.x snapshots
+	maven { url "https://repo.spring.io/snapshot" }
 	maven { url "https://repo.spring.io/milestone" }
 }
 
@@ -31,7 +32,8 @@ ext['spring.version'] = '5.0.0.M1'
 
 dependencies {
 	// Use Tomcat by default
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT')
+	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT"
+	compile "io.netty:netty-buffer:4.1.4.Final"
 
 	compile "io.reactivex:rxjava:1.1.6"
 
