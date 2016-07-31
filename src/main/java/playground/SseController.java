@@ -21,27 +21,27 @@ import java.time.Duration;
 import reactor.core.publisher.Flux;
 
 import org.springframework.http.codec.SseEvent;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SseController {
 
-	@RequestMapping("/sse/string")
+	@GetMapping("/sse/string")
 	Flux<String> string() {
 		return Flux
 			.interval(Duration.ofSeconds(1))
 			.map(l -> "foo " + l);
 	}
 
-	@RequestMapping("/sse/person")
+	@GetMapping("/sse/person")
 	Flux<Person> person() {
 		return Flux
 			.interval(Duration.ofSeconds(1))
 			.map(l -> new Person(Long.toString(l), "foo", "bar"));
 	}
 
-	@RequestMapping("/sse-raw")
+	@GetMapping("/sse-raw")
 	Flux<SseEvent> sse() {
 		return Flux
 			.interval(Duration.ofSeconds(1))

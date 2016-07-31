@@ -21,10 +21,10 @@ import rx.Observable;
 import rx.Single;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -41,18 +41,18 @@ public class RxJavaMongoPersonController {
 		this.repository = repository;
 	}
 
-	@RequestMapping(path = "/rxjava/mongo", method = RequestMethod.POST)
-	public Observable<Person> create(@RequestBody Observable<Person> personStream) {
+	@PostMapping("/rxjava/mongo")
+	Observable<Person> create(@RequestBody Observable<Person> personStream) {
 		return this.repository.save(personStream);
 	}
 
-	@RequestMapping(path = "/rxjava/mongo", method = RequestMethod.GET)
-	public Observable<Person> list() {
+	@GetMapping("/rxjava/mongo")
+	Observable<Person> list() {
 		return this.repository.findAll();
 	}
 
-	@RequestMapping(path = "/rxjava/mongo/{id}", method = RequestMethod.GET)
-	public Single<Person> findById(@PathVariable String id) {
+	@GetMapping("/rxjava/mongo/{id}")
+	Single<Person> findById(@PathVariable String id) {
 		return this.repository.findOne(id);
 	}
 
