@@ -27,8 +27,8 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
-ext['reactor.version'] = '3.0.0.RC1'
-ext['spring.version'] = '5.0.0.M1'
+ext['reactor.version'] = '3.0.1.BUILD-SNAPSHOT'
+ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
 
 dependencies {
 	// Use Tomcat by default

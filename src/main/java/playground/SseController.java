@@ -20,7 +20,7 @@ import java.time.Duration;
 
 import reactor.core.publisher.Flux;
 
-import org.springframework.http.codec.SseEvent;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,16 +42,14 @@ public class SseController {
 	}
 
 	@GetMapping("/sse-raw")
-	Flux<SseEvent> sse() {
+	Flux<ServerSentEvent<String>> sse() {
 		return Flux
 			.interval(Duration.ofSeconds(1))
-			.map(l -> {
-				SseEvent event = new SseEvent();
-				event.setId(Long.toString(l));
-				event.setData("foo\nbar");
-				event.setComment("bar\nbaz");
-				return event;
-		});
+			.map(l -> ServerSentEvent
+					.builder("foo\nbar")
+					.comment("bar\nbaz")
+					.id(Long.toString(l))
+					.build());
 	}
 
 }
