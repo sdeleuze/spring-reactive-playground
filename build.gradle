@@ -27,7 +27,7 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
-ext['reactor.version'] = '3.0.1.BUILD-SNAPSHOT'
+ext['reactor.version'] = '3.0.2.RELEASE'
 ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
 
 dependencies {
