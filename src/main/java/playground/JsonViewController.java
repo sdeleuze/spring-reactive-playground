@@ -17,7 +17,9 @@
 package playground;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import rx.Observable;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,11 +39,22 @@ public class JsonViewController {
 		return jacksonViewBean;
 	}
 
-	// TODO Does not work yet when wrapped in Flux or Mono because in that case the MethodParameter can't be retrieved with ResolvableType#getSource(), to be fixed in Spring Framework 5.0 M2
 	@GetMapping(path = "/jackson/view-with-mono")
 	@JsonView(MyJacksonView1.class)
 	Mono<JacksonViewBean> viewWithMono() {
 		return Mono.just(jacksonViewBean);
+	}
+
+	@GetMapping(path = "/jackson/view-with-flux")
+	@JsonView(MyJacksonView1.class)
+	Flux<JacksonViewBean> viewWithFlux() {
+		return Flux.just(jacksonViewBean, jacksonViewBean);
+	}
+
+	@GetMapping(path = "/jackson/view-with-observable")
+	@JsonView(MyJacksonView1.class)
+	Observable<JacksonViewBean> viewWithObservable() {
+		return Observable.just(jacksonViewBean, jacksonViewBean);
 	}
 
 	@GetMapping(path = "/jackson/full")
