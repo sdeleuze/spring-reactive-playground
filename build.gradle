@@ -1,9 +1,10 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.0.RELEASE'
+		springBootVersion = '2.0.0.BUILD-SNAPSHOT'
 	}
 	repositories {
 		mavenCentral()
+		maven { url "https://repo.spring.io/snapshot" }
 		maven { url "https://repo.spring.io/milestone" }
 	}
 	dependencies {
@@ -32,9 +33,8 @@ ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
 dependencies {
 	// Use Tomcat by default
 	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT"
-	compile "io.netty:netty-buffer:4.1.4.Final"
 
-	compile "io.reactivex:rxjava:1.1.6"
+	compile "io.reactivex:rxjava:1.1.9"
 
 	compile "org.springframework.data:spring-data-commons:2.0.0.DATACMNS-836-SNAPSHOT"
 	compile "org.springframework.data:spring-data-mongodb:2.0.0.DATAMONGO-1444-SNAPSHOT"
@@ -45,7 +45,7 @@ dependencies {
 	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.projectreactor:reactor-netty:0.5.0.BUILD-SNAPSHOT"
+	compile "io.projectreactor.ipc:reactor-netty:0.5.1.RELEASE"
     */
 
 	// With RxNetty
@@ -53,8 +53,8 @@ dependencies {
 	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.reactivex:rxnetty-common:0.5.2-SNAPSHOT"
-	compile "io.reactivex:rxnetty-http:0.5.2-SNAPSHOT"
+	compile "io.reactivex:rxnetty-common:0.5.2-rc.4"
+	compile "io.reactivex:rxnetty-http:0.5.2-rc.4"
     */
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
