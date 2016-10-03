@@ -29,9 +29,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.core.ReactiveMongoDbFactory;
+import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.repository.support.ReactiveMongoRepositoryFactory;
 import org.springframework.data.mongodb.repository.support.SimpleReactiveMongoRepository;
 import org.springframework.data.repository.query.DefaultEvaluationContextProvider;
@@ -67,12 +68,12 @@ public class MongoConfiguration implements BeanClassLoaderAware, BeanFactoryAwar
 	}
 
 	@Bean
-	ReactiveMongoDbFactory reactiveMongoDbFactory(MongoClient mongoClient){
-		return new ReactiveMongoDbFactory(mongoClient, database);
+	ReactiveMongoDatabaseFactory reactiveMongoDbFactory(MongoClient mongoClient){
+		return new SimpleReactiveMongoDatabaseFactory(mongoClient, database);
 	}
 
 	@Bean
-	ReactiveMongoTemplate reactiveMongoTemplate(ReactiveMongoDbFactory mongoDbFactory){
+	ReactiveMongoTemplate reactiveMongoTemplate(ReactiveMongoDatabaseFactory mongoDbFactory){
 		return new ReactiveMongoTemplate(mongoDbFactory);
 	}
 
