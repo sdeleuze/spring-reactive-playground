@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Mongo</title>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <script type="text/javascript" src="/file?name=common.js"></script>
+
+</head>
+<body>
+
+    <p>
+        <button id="list-all">List all the persons</button>
+        <button id="get-one">Get one person</button>
+    </p>
+
+    <p id="output"></p>
+
+    <p>
+        Return <a href="/">to the index</a>
+    </p>
+
+    <script type="text/javascript">
+
+        addEvent("click", document.getElementById('list-all'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/mongo/', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('get-one'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/mongo/1', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+
+    </script>
+
+</body>
