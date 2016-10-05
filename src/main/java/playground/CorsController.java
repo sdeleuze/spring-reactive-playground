@@ -16,29 +16,30 @@
 
 package playground;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author Sebastien Deleuze
+ */
 @RestController
-public class ResourceController {
+public class CorsController {
 
-	@GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
-	Resource index() {
-		return new ClassPathResource("static/index.html");
+	@GetMapping("/cors/no")
+	public Person noCors() {
+		return new Person("foo", "Bar", "Baz");
 	}
 
-	@GetMapping(path = "/cors", produces = MediaType.TEXT_HTML_VALUE)
-	Resource cors() {
-		return new ClassPathResource("static/cors.html");
+	@GetMapping("/cors/config")
+	public Person corsConfig() {
+		return new Person("foo", "Bar", "Baz");
 	}
 
-	@GetMapping(path = "/file")
-	Resource resource(@RequestParam(value = "name", required = false) String name) {
-		return new ClassPathResource("static/" + name);
+	@CrossOrigin
+	@GetMapping("/cors/annotation")
+	public Person corsaAnotation() {
+		return new Person("foo", "Bar", "Baz");
 	}
 
 }

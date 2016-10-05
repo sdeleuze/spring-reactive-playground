@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Cross Origin</title>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <script type="text/javascript">
+        function addEvent(evnt, elem, func) {
+            if (elem.addEventListener)  // W3C DOM
+                elem.addEventListener(evnt,func,false);
+            else if (elem.attachEvent) { // IE DOM
+                elem.attachEvent("on"+evnt, func);
+            }
+            else { // No much to do
+                elem[evnt] = func;
+            }
+        }
+
+        function print(message) {
+            var elem = document.createElement('span');
+            elem.innerHTML = message + '<br />';
+            document.getElementById('output').appendChild(elem);
+        }
+    </script>
+
+</head>
+<body>
+
+    <p>
+        This page must be run from other domain than http://localhost:8080 to be effective.<br />
+        You can run 2 instances of this app, one on http://localhost:8080 for REST webservices<br />
+        and one on http://localhost:8181 for this page.
+    </p>
+
+
+    <button id="no-cors">No CORS</button>
+
+    <button id="cors-config">CORS Config</button>
+
+    <button id="cors-annotation">@CrossOrigin annotation</button>
+
+
+    <p id="output"></p>
+
+    <script type="text/javascript">
+
+        addEvent("click", document.getElementById('no-cors'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/cors/no', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('cors-config'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/cors/config', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('cors-annotation'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/cors/annotation', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+    </script>
+
+</body>

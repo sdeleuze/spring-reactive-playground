@@ -21,16 +21,22 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.web.reactive.config.CorsRegistry;
+import org.springframework.web.reactive.config.WebReactiveConfiguration;
 
 /**
  * @author Sebastien Deleuze
  */
 @SpringBootApplication
 @EnableAutoConfiguration(exclude={MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
-public class Application {
+public class Application extends WebReactiveConfiguration {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
 	}
 
+	@Override
+	protected void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/cors/config");
+	}
 }
