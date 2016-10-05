@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Sebastien Deleuze
  */
 @RestController
-public class JsonViewController {
+public class JacksonController {
 
 	private final JacksonViewBean jacksonViewBean =
 			new JacksonViewBean("with", "with", "without");

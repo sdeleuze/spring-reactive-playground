@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE example</title>
+    <script type="text/javascript" src="/file?name=common.js"></script>
+</head>
+    <p>
+        <p>
+            <button id="send-data">Send data</button><br />
+            SSE with processor: <ul id="processor-events"></ul>
+        </p>
+        <p>
+            <button id="subscribe-string-events">Subscribe</button><br />
+            SSE with String: <ul id="string-events"></ul>
+        </p>
+        <p>
+            <button id="subscribe-person-events">Subscribe</button><br />
+            SSE with Person: <ul id="person-events"></ul>
+        </p>
+        <p>
+            <button id="subscribe-raw-events">Subscribe</button><br />
+            SSE with raw events: <ul id="raw-events"></ul>
+        </p>
+    </p>
+
+    <p>
+        Return <a href="/">to the index</a>
+    </p>
+
+    <script type="application/javascript">
+
+        addEvent("click", document.getElementById('subscribe-string-events'), function() {
+            var stringEvents = document.getElementById("string-events");
+            var stringEventSource = new EventSource("/sse/string");
+            stringEventSource.onmessage = function(e) {
+              var newElement = document.createElement("li");
+              newElement.innerHTML = "Message: " + e.data;
+              stringEvents.appendChild(newElement);
+            }
+        });
+
+
+        addEvent("click", document.getElementById('subscribe-person-events'), function() {
+            var personEvents = document.getElementById("person-events");
+            var personEventSource = new EventSource("/sse/person");
+            personEventSource.onmessage = function(e) {
+              var newElement = document.createElement("li");
+              var person = JSON.parse(e.data);
+              newElement.innerHTML = "Person: id=" + person.id + ", firstname=" + person.firstname + ", lastname=" + person.lastname;
+              personEvents.appendChild(newElement);
+            }
+        });
+
+        addEvent("click", document.getElementById('subscribe-raw-events'), function() {
+            var rawEvents = document.getElementById("raw-events");
+            var rawEventSource = new EventSource("/sse/event");
+            rawEventSource.onmessage = function(e) {
+              var newElement = document.createElement("li");
+              newElement.innerHTML = "Event: id=" + e.lastEventId + ", data=" + e.data;
+              rawEvents.appendChild(newElement);
+            }
+        });
+
+        addEvent("click", document.getElementById('send-data'), function() {
+            var req = new XMLHttpRequest();
+            req.open('POST', '/sse/receive/foo', true);
+            req.send(null);
+        });
+
+        var processorEvents = document.getElementById("processor-events");
+        var processorEventSource = new EventSource("/sse/send");
+        processorEventSource.onmessage = function(e) {
+          var newElement = document.createElement("li");
+          newElement.innerHTML = "Event: id=" + e.lastEventId + ", data=" + e.data;
+          processorEvents.appendChild(newElement);
+        }
+
+    </script>
+</body>
+</html>

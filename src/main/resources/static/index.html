@@ -1,52 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>SSE example</title>
+    <meta charset="utf-8">
+    <title>Spring Reactive Playground</title>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 </head>
-<p>
+<body>
 
     <p>
-        SSE with String: <ul id="string-events"></ul>
+        Welcome to Spring Reactive Playground!<br />
+        What do you want to test?
+
+        <ul>
+            <li><a href="/file?name=cors.html">CORS</a></li>
+            <li><a href="/file?name=jackson.html">JSON REST Webservices with Jackson</a></li>
+            <li><a href="/file?name=sse.html">Server Sent Events</a></li>
+        </ul>
     </p>
 
-    <p>
-        SSE with Person: <ul id="person-events"></ul>
-    </p>
-
-    <p>
-        SSE with raw events: <ul id="raw-events"></ul>
-    </p>
-
-    </ul>
-    </p>
-    <script type="application/javascript">
-
-        var stringEvents = document.getElementById("string-events");
-        var stringEventSource = new EventSource("/sse/string");
-        stringEventSource.onmessage = function(e) {
-          var newElement = document.createElement("li");
-          newElement.innerHTML = "Message: " + e.data;
-          stringEvents.appendChild(newElement);
-        }
-
-        var personEvents = document.getElementById("person-events");
-        var personEventSource = new EventSource("/sse/person");
-        personEventSource.onmessage = function(e) {
-          var newElement = document.createElement("li");
-          var person = JSON.parse(e.data);
-          newElement.innerHTML = "Person: id=" + person.id + ", firstname=" + person.firstname + ", lastname=" + person.lastname;
-          personEvents.appendChild(newElement);
-        }
-
-        var rawEvents = document.getElementById("raw-events");
-        var rawEventSource = new EventSource("/sse-raw");
-        rawEventSource.onmessage = function(e) {
-          var newElement = document.createElement("li");
-          newElement.innerHTML = "Event: id=" + e.lastEventId + ", data=" + e.data;
-          rawEvents.appendChild(newElement);
-        }
-
-    </script>
 </body>
-</html>

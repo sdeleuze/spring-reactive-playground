@@ -19,13 +19,18 @@ package playground;
 import java.time.Duration;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.ReplayProcessor;
 
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SseController {
+
+	private ReplayProcessor<ServerSentEvent<String>> replayProcessor = ReplayProcessor.<ServerSentEvent<String>>create();
 
 	@GetMapping("/sse/string")
 	Flux<String> string() {
@@ -41,8 +46,8 @@ public class SseController {
 			.map(l -> new Person(Long.toString(l), "foo", "bar"));
 	}
 
-	@GetMapping("/sse-raw")
-	Flux<ServerSentEvent<String>> sse() {
+	@GetMapping("/sse/event")
+	Flux<ServerSentEvent<String>> event() {
 		return Flux
 			.interval(Duration.ofSeconds(1))
 			.map(l -> ServerSentEvent
@@ -50,6 +55,16 @@ public class SseController {
 					.comment("bar\nbaz")
 					.id(Long.toString(l))
 					.build());
+	}
+
+	@PostMapping("/sse/receive/{val}")
+    public void receive(@PathVariable("val") String s) {
+        replayProcessor.onNext(ServerSentEvent.builder(s).build());
+    }
+
+	@GetMapping("/sse/send")
+	public Flux<ServerSentEvent<String>> send() {
+		return replayProcessor.log("playground");
 	}
 
 }

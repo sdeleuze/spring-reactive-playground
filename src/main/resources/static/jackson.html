@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jackson</title>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <script type="text/javascript" src="/file?name=common.js"></script>
+
+</head>
+<body>
+
+    <p>
+        <button id="jsonview">JsonView</button>
+        <button id="jsonview-with-mono">JsonView with Mono</button>
+        <button id="jsonview-with-flux">JsonView with Flux</button>
+        <button id="jsonview-with-observable">JsonView with Observable</button>
+        <button id="full">No JsonView</button>
+    </p>
+
+    <p id="output"></p>
+
+    <p>
+        Return <a href="/">to the index</a>
+    </p>
+
+    <script type="text/javascript">
+
+        addEvent("click", document.getElementById('jsonview'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/jackson/view', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('jsonview-with-mono'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/jackson/view-with-mono', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('jsonview-with-flux'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/jackson/view-with-flux', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('jsonview-with-observable'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/jackson/view-with-observable', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+        addEvent("click", document.getElementById('full'), function() {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://' + document.domain + ':8080/jackson/full', false);
+            req.send(null);
+            if(req.status == 200)
+                print('Response received: ' + req.responseText);
+        });
+
+    </script>
+
+</body>

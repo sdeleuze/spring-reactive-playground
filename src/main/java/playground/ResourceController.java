@@ -31,11 +31,6 @@ public class ResourceController {
 		return new ClassPathResource("static/index.html");
 	}
 
-	@GetMapping(path = "/cors", produces = MediaType.TEXT_HTML_VALUE)
-	Resource cors() {
-		return new ClassPathResource("static/cors.html");
-	}
-
 	@GetMapping(path = "/file")
 	Resource resource(@RequestParam(value = "name", required = false) String name) {
 		return new ClassPathResource("static/" + name);

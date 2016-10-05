@@ -4,24 +4,7 @@
     <meta charset="utf-8">
     <title>Cross Origin</title>
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-    <script type="text/javascript">
-        function addEvent(evnt, elem, func) {
-            if (elem.addEventListener)  // W3C DOM
-                elem.addEventListener(evnt,func,false);
-            else if (elem.attachEvent) { // IE DOM
-                elem.attachEvent("on"+evnt, func);
-            }
-            else { // No much to do
-                elem[evnt] = func;
-            }
-        }
-
-        function print(message) {
-            var elem = document.createElement('span');
-            elem.innerHTML = message + '<br />';
-            document.getElementById('output').appendChild(elem);
-        }
-    </script>
+    <script type="text/javascript" src="/file?name=common.js"></script>
 
 </head>
 <body>
@@ -32,15 +15,17 @@
         and one on http://localhost:8181 for this page.
     </p>
 
-
-    <button id="no-cors">No CORS</button>
-
-    <button id="cors-config">CORS Config</button>
-
-    <button id="cors-annotation">@CrossOrigin annotation</button>
-
+    <p>
+        <button id="no-cors">No CORS</button>
+        <button id="cors-config">CORS Config</button>
+        <button id="cors-annotation">@CrossOrigin annotation</button>
+    </p>
 
     <p id="output"></p>
+
+    <p>
+        Return <a href="/">to the index</a>
+    </p>
 
     <script type="text/javascript">
 
