@@ -3,7 +3,7 @@ Spring Reactive Playground is a sandbox for experimenting on applications based 
 
 ## Usage
 
-Server-Sent Events support should work out of the box, just run `Application#main()` and open `http://localhost:8080/` in your browser.
+Open `http://localhost:8080/` in your browser and use the various test pages.
 
 For testing MongoDB support, install MongoDB, run `mongod`, enable `mongo` profile in `application.properties`, and run `Application#main()`:
 
