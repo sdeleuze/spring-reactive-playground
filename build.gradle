@@ -31,8 +31,6 @@ ext['reactor.version'] = '3.0.2.RELEASE'
 ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
 
 dependencies {
-	// Use Tomcat by default
-	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT"
 
 	compile "io.reactivex:rxjava:1.1.9"
 
@@ -40,13 +38,17 @@ dependencies {
 	compile "org.springframework.data:spring-data-mongodb:2.0.0.DATAMONGO-1444-SNAPSHOT"
 	compile "org.mongodb:mongodb-driver-reactivestreams:1.2.0"
 
+	// With Tomcat (by default)
+	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT"
+
 	// With Reactor Netty
 	/*
 	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
 	compile "io.projectreactor.ipc:reactor-netty:0.5.1.RELEASE"
-    */
+	*/
+
 
 	// With RxNetty
 	/*
@@ -55,7 +57,29 @@ dependencies {
 	}
 	compile "io.reactivex:rxnetty-common:0.5.2-rc.4"
 	compile "io.reactivex:rxnetty-http:0.5.2-rc.4"
-    */
+	*/
+
+	// With Undertow
+	/*
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+	compile "io.undertow:undertow-core:1.4.3.Final"
+	*/
+
+	// With Jetty
+	/*
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+	compile("org.eclipse.jetty:jetty-server:9.4.0.RC0")
+	compile("org.eclipse.jetty:jetty-servlet:9.4.0.RC0")
+	compile("org.eclipse.jetty:jetty-util:9.4.0.RC0")
+	compile("org.eclipse.jetty:jetty-security:9.4.0.RC0")
+	compile("org.eclipse.jetty:jetty-io:9.4.0.RC0")
+	compile("org.eclipse.jetty:jetty-http:9.4.0.RC0")
+	*/
+
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
