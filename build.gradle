@@ -46,9 +46,8 @@ dependencies {
 	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.projectreactor.ipc:reactor-netty:0.5.1.RELEASE"
+	compile "io.projectreactor.ipc:reactor-netty:0.5.2.RELEASE"
 	*/
-
 
 	// With RxNetty
 	/*
@@ -79,7 +78,6 @@ dependencies {
 	compile("org.eclipse.jetty:jetty-io:9.4.0.RC0")
 	compile("org.eclipse.jetty:jetty-http:9.4.0.RC0")
 	*/
-
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
