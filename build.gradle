@@ -17,7 +17,7 @@ apply plugin: 'spring-boot'
 
 jar {
 	baseName = 'spring-reactive-playground'
-	version = '0.0.1-SNAPSHOT'
+	version = '0.1.0-SNAPSHOT'
 }
 
 repositories {
@@ -27,8 +27,11 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
-ext['reactor.version'] = '3.0.2.RELEASE'
-ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.boot.experimental:spring-boot-dependencies-web-reactive:0.1.0.BUILD-SNAPSHOT"
+	}
+}
 
 dependencies {
 
@@ -40,44 +43,44 @@ dependencies {
 	compile "org.mongodb:mongodb-driver-reactivestreams:1.2.0"
 
 	// With Tomcat (by default)
-	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT"
+	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive"
 
 	// With Reactor Netty
 	/*
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.projectreactor.ipc:reactor-netty:0.5.2.RELEASE"
+	compile "io.projectreactor.ipc:reactor-netty"
 	*/
 
 	// With RxNetty
 	/*
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.reactivex:rxnetty-common:0.5.2-rc.4"
-	compile "io.reactivex:rxnetty-http:0.5.2-rc.4"
+	compile "io.reactivex:rxnetty-common"
+	compile "io.reactivex:rxnetty-http"
 	*/
 
 	// With Undertow
 	/*
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile "io.undertow:undertow-core:1.4.3.Final"
+	compile "io.undertow:undertow-core"
 	*/
 
 	// With Jetty
 	/*
-	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive:0.1.0.BUILD-SNAPSHOT') {
+	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
-	compile("org.eclipse.jetty:jetty-server:9.4.0.RC0")
-	compile("org.eclipse.jetty:jetty-servlet:9.4.0.RC0")
-	compile("org.eclipse.jetty:jetty-util:9.4.0.RC0")
-	compile("org.eclipse.jetty:jetty-security:9.4.0.RC0")
-	compile("org.eclipse.jetty:jetty-io:9.4.0.RC0")
-	compile("org.eclipse.jetty:jetty-http:9.4.0.RC0")
+	compile("org.eclipse.jetty:jetty-server")
+	compile("org.eclipse.jetty:jetty-servlet")
+	compile("org.eclipse.jetty:jetty-util")
+	compile("org.eclipse.jetty:jetty-security")
+	compile("org.eclipse.jetty:jetty-io")
+	compile("org.eclipse.jetty:jetty-http")
 	*/
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
