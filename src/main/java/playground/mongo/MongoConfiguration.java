@@ -16,27 +16,17 @@
 
 package playground.mongo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
-import com.mongodb.reactivestreams.client.MongoDatabase;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanClassLoaderAware;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory;
-import org.springframework.data.mongodb.repository.support.ReactiveMongoRepositoryFactory;
-import org.springframework.data.mongodb.repository.support.SimpleReactiveMongoRepository;
-import org.springframework.data.repository.query.DefaultEvaluationContextProvider;
+import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
 
 /**
  * @author Sebastien Deleuze
@@ -44,68 +34,24 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  */
 @Profile("mongo")
 @Configuration
-public class MongoConfiguration implements BeanClassLoaderAware, BeanFactoryAware {
+@EnableReactiveMongoRepositories
+public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
-	@Value("${mongo.database}")
-	private String database;
+    @Value("${mongo.database}")
+    private String database;
 
-	private ClassLoader classLoader;
-	private BeanFactory beanFactory;
+    @Bean
+    ObjectMapper objectMapper() {
+        return Jackson2ObjectMapperBuilder.json().build();
+    }
 
-	@Bean
-	ObjectMapper objectMapper() {
-		return Jackson2ObjectMapperBuilder.json().build();
-	}
+    @Override
+    public MongoClient mongoClient() {
+        return MongoClients.create();
+    }
 
-	@Bean
-	MongoClient mongoClient() {
-		return MongoClients.create();
-	}
-
-	@Bean
-	MongoDatabase mongoDatabase(MongoClient mongoClient) {
-		return mongoClient.getDatabase(database);
-	}
-
-	@Bean
-	ReactiveMongoDatabaseFactory reactiveMongoDbFactory(MongoClient mongoClient){
-		return new SimpleReactiveMongoDatabaseFactory(mongoClient, database);
-	}
-
-	@Bean
-	ReactiveMongoTemplate reactiveMongoTemplate(ReactiveMongoDatabaseFactory mongoDbFactory){
-		return new ReactiveMongoTemplate(mongoDbFactory);
-	}
-
-	@Bean
-	ReactiveMongoRepositoryFactory reactiveMongoRepositoryFactory(ReactiveMongoOperations reactiveMongoOperations){
-
-		ReactiveMongoRepositoryFactory factory = new ReactiveMongoRepositoryFactory(reactiveMongoOperations);
-		factory.setRepositoryBaseClass(SimpleReactiveMongoRepository.class);
-		factory.setBeanClassLoader(classLoader);
-		factory.setBeanFactory(beanFactory);
-		factory.setEvaluationContextProvider(DefaultEvaluationContextProvider.INSTANCE);
-
-		return factory;
-	}
-
-	@Bean
-	ReactiveMongoPersonRepository reactivePersonRepository(ReactiveMongoRepositoryFactory factory){
-		return factory.getRepository(ReactiveMongoPersonRepository.class);
-	}
-
-	@Bean
-	ReactiveMongoRxJavaPersonRepository rxJavaPersonRepository(ReactiveMongoRepositoryFactory factory){
-		return factory.getRepository(ReactiveMongoRxJavaPersonRepository.class);
-	}
-
-	@Override
-	public void setBeanClassLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
-	}
-
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this.beanFactory = beanFactory;
-	}
+    @Override
+    protected String getDatabaseName() {
+        return database;
+    }
 }
