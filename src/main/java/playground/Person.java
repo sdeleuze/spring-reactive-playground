@@ -16,9 +16,12 @@
 
 package playground;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * @author Sebastien Deleuze
  */
+@Document
 public class Person {
 
 	private String id;
