@@ -32,7 +32,8 @@ ext['spring.version'] = '5.0.0.BUILD-SNAPSHOT'
 
 dependencies {
 
-	compile "io.reactivex:rxjava:1.1.9"
+	compile "io.reactivex:rxjava:1.2.1"
+	compile "io.reactivex:rxjava-reactive-streams:1.2.0"
 
 	compile "org.springframework.data:spring-data-commons:2.0.0.DATACMNS-836-SNAPSHOT"
 	compile "org.springframework.data:spring-data-mongodb:2.0.0.DATAMONGO-1444-SNAPSHOT"
