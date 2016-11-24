@@ -36,10 +36,10 @@ dependencyManagement {
 dependencies {
 
 	compile "io.reactivex:rxjava:1.2.1"
-	compile "io.reactivex:rxjava-reactive-streams:1.2.0"
+	compile "io.reactivex:rxjava-reactive-streams:1.2.1"
 
-	compile "org.springframework.data:spring-data-commons:2.0.0.DATACMNS-836-SNAPSHOT"
-	compile "org.springframework.data:spring-data-mongodb:2.0.0.DATAMONGO-1444-SNAPSHOT"
+	compile "org.springframework.data:spring-data-commons:2.0.0.M1"
+	compile "org.springframework.data:spring-data-mongodb:2.0.0.M1"
 	compile "org.mongodb:mongodb-driver-reactivestreams:1.2.0"
 
 	// With Tomcat (by default)

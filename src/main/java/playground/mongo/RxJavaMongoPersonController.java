@@ -53,7 +53,7 @@ public class RxJavaMongoPersonController {
 
 	@GetMapping("/rxjava/mongo/{id}")
 	Single<Person> findById(@PathVariable String id) {
-		return this.repository.findOne(id);
+		return this.repository.findOne(id).toSingle();
 	}
 
 }

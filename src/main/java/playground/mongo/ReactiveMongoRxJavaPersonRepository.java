@@ -15,13 +15,13 @@
  */
 package playground.mongo;
 
-import org.springframework.data.repository.reactive.RxJavaCrudRepository;
+import org.springframework.data.repository.reactive.RxJava1CrudRepository;
 
 import playground.Person;
 
 /**
  * @author Mark Paluch
  */
-public interface ReactiveMongoRxJavaPersonRepository extends RxJavaCrudRepository<Person, String> {
+public interface ReactiveMongoRxJavaPersonRepository extends RxJava1CrudRepository<Person, String> {
 
 }
