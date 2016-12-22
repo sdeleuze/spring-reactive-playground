@@ -17,6 +17,7 @@
 package playground.mongo;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -27,6 +28,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
+import playground.Person;
 
 /**
  * @author Sebastien Deleuze
@@ -53,5 +55,15 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     @Override
     protected String getDatabaseName() {
         return database;
+    }
+
+    @Bean
+    CommandLineRunner initData(PersonReactiveCrudRepository personRepository) {
+        return (p) -> {
+            personRepository.deleteAll().block();
+            personRepository.save(new Person("1", "Eric", "Foo")).block();
+            personRepository.save(new Person("2", "Raymond", "Bar")).block();
+            personRepository.save(new Person("3", "Paul", "Baz")).block();
+        };
     }
 }

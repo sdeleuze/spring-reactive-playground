@@ -16,6 +16,7 @@
 
 package playground;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -34,6 +35,11 @@ public class Person {
 	public Person() {
 	}
 
+	public Person(String firstname, String lastname) {
+		this.firstname = firstname;
+		this.lastname = lastname;
+	}
+
 	public Person(String id, String firstname, String lastname) {
 		this.id = id;
 		this.firstname = firstname;
@@ -41,6 +47,7 @@ public class Person {
 	}
 
 
+	@Id
 	public String getId() {
 		return id;
 	}
