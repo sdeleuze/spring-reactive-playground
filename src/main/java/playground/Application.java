@@ -16,14 +16,25 @@
 
 package playground;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.EnableWebReactive;
 import org.springframework.web.reactive.config.WebReactiveConfigurer;
+import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
+import org.springframework.web.reactive.socket.WebSocketHandler;
+import org.springframework.web.reactive.socket.server.WebSocketService;
+import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
+import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
+import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
 
 /**
  * @author Sebastien Deleuze
@@ -40,5 +51,26 @@ public class Application implements WebReactiveConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/cors/config");
+	}
+
+	@Bean
+	public HandlerMapping handlerMapping() {
+
+		Map<String, WebSocketHandler> map = new HashMap<>();
+		map.put("/websocket/echo", new EchoWebSocketHandler());
+
+		SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+		mapping.setUrlMap(map);
+		return mapping;
+	}
+
+	@Bean
+	public WebSocketHandlerAdapter handlerAdapter() {
+		return new WebSocketHandlerAdapter(webSocketService());
+	}
+
+	@Bean
+	public WebSocketService webSocketService() {
+		return new HandshakeWebSocketService(new ReactorNettyRequestUpgradeStrategy());
 	}
 }

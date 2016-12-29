@@ -42,16 +42,15 @@ dependencies {
 	compile "org.springframework.data:spring-data-mongodb:2.0.0.BUILD-SNAPSHOT"
 	compile "org.mongodb:mongodb-driver-reactivestreams:1.2.0"
 
-	// With Tomcat (by default)
-	compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive"
+	// With Tomcat
+	//compile "org.springframework.boot.experimental:spring-boot-starter-web-reactive"
 
 	// With Reactor Netty
-	/*
 	compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive') {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
 	}
 	compile "io.projectreactor.ipc:reactor-netty"
-	*/
+
 
 	// With RxNetty
 	/*

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket example</title>
+    <script type="text/javascript" src="/file?name=common.js"></script>
+</head>
+    <p>Echo the input with a delay of 2 seconds</p>
+    <p>
+        Input<br />
+        <textarea id="input" name="input" cols="40"></textarea>
+    </p>
+
+    <p>
+        Output<br />
+        <div id="output"></div>
+    </p>
+
+    <p>
+        Return <a href="/">to the index</a>
+    </p>
+
+    <script type="application/javascript">
+        var socket = new WebSocket("ws://" + location.host + "/websocket/echo");
+        addEvent("keypress", document.getElementById('input'), function() {
+            socket.send(event.key);
+        });
+
+        var output = document.getElementById("output");
+        socket.onmessage = function(e) {
+          output.innerHTML = output.innerHTML + e.data;
+        }
+
+    </script>
+</body>
+</html>
