@@ -22,7 +22,7 @@
 
     <script type="application/javascript">
         var socket = new WebSocket("ws://" + location.host + "/websocket/echo");
-        addEvent("keypress", document.getElementById('input'), function() {
+        addEvent("keypress", document.getElementById('input'), function(event) {
             socket.send(event.key);
         });
 
